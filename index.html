@@ -76,32 +76,24 @@
         /* ===== HERO ===== */
         .hero {
             position: relative; min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
+            display: flex; align-items: flex-end; justify-content: center;
             overflow: hidden;
         }
         .hero-bg {
             position: absolute; inset: 0;
-            background: url('images/hero-mountain.jpg') center/cover no-repeat;
+            background: url('images/hero-mountain.jpg') center top/cover no-repeat;
         }
         .hero-overlay {
             position: absolute; inset: 0;
-            background: linear-gradient(180deg, rgba(44,44,44,0.25) 0%, rgba(44,44,44,0.15) 40%, rgba(44,44,44,0.55) 80%, rgba(250,246,241,1) 100%);
+            background: linear-gradient(180deg, transparent 0%, transparent 40%, rgba(44,44,44,0.3) 65%, rgba(250,246,241,1) 100%);
         }
         .hero-content {
             position: relative; z-index: 2; text-align: center; padding: 2rem;
-            max-width: 800px;
-        }
-        .hero-eyebrow {
-            font-size: 0.8rem; font-weight: 500; text-transform: uppercase;
-            letter-spacing: 0.2em; color: rgba(255,255,255,0.8); margin-bottom: 1.5rem;
-        }
-        .hero h1 {
-            font-family: var(--font-heading); font-size: clamp(3rem, 8vw, 6.5rem);
-            color: white; line-height: 0.95; margin-bottom: 1.5rem; letter-spacing: -0.02em;
+            max-width: 600px; margin-top: auto; margin-bottom: 4rem;
         }
         .hero-sub {
-            font-size: 1.15rem; color: rgba(255,255,255,0.85);
-            max-width: 500px; margin: 0 auto 2.5rem; line-height: 1.7; font-weight: 300;
+            font-size: 1.1rem; color: rgba(255,255,255,0.9);
+            max-width: 500px; margin: 0 auto 2rem; line-height: 1.7; font-weight: 400;
         }
         .hero-btns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
         .btn {
@@ -215,16 +207,10 @@
         .innsikt-section { background: var(--bg); }
         .innsikt-hero {
             position: relative; border-radius: 16px; overflow: hidden; margin-bottom: 3rem;
-            aspect-ratio: 21/9; background: url('images/innsikt-hero.jpg') center/cover no-repeat;
+            aspect-ratio: 21/9;
         }
-        .innsikt-hero-overlay {
-            position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(44,44,44,0.6), rgba(44,44,44,0.3));
-            display: flex; align-items: center; justify-content: center;
-        }
-        .innsikt-hero h2 {
-            font-family: var(--font-heading); font-size: clamp(2rem, 4vw, 3.5rem);
-            color: white; text-align: center;
+        .innsikt-hero img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
         }
         .report-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 2rem; }
         .report-card {
@@ -454,8 +440,6 @@
     <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
-        <p class="hero-eyebrow">Norsk filmbransje sier</p>
-        <h1>Ja til<br>No-Brainers</h1>
         <p class="hero-sub">Filminsentivordningen må styrkes — nå. Norsk film har verdensklasse talent, men taper produksjoner til utlandet hver dag.</p>
         <div class="hero-btns">
             <a href="#handling" class="btn btn-fill">Signer oppropet</a>
@@ -587,9 +571,7 @@
 <section class="innsikt-section" id="innsikt">
     <div class="container">
         <div class="innsikt-hero reveal">
-            <div class="innsikt-hero-overlay">
-                <h2>Innsikt og Kampanje</h2>
-            </div>
+            <img src="images/innsikt-hero.jpg" alt="Innsikt og Kampanje" loading="lazy">
         </div>
 
         <div class="reveal">
