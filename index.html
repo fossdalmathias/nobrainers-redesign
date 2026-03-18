@@ -43,6 +43,10 @@
             display: flex; align-items: center; justify-content: space-between;
             transition: all 0.4s ease;
         }
+        .navbar:not(.scrolled) .nav-logo,
+        .navbar:not(.scrolled) .nav-links a { color: white; }
+        .navbar:not(.scrolled) .lang-switch { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); }
+        .navbar:not(.scrolled) .nav-toggle span { background: white; }
         .navbar.scrolled {
             background: rgba(250, 246, 241, 0.95);
             backdrop-filter: blur(16px);
@@ -75,21 +79,16 @@
 
         /* ===== HERO ===== */
         .hero {
-            position: relative; min-height: 100vh;
-            display: flex; align-items: flex-end; justify-content: center;
-            overflow: hidden;
+            position: relative;
+            display: flex; flex-direction: column; align-items: center;
+            overflow: hidden; background: var(--bg-dark);
         }
-        .hero-bg {
-            position: absolute; inset: 0;
-            background: url('images/hero-mountain.jpg') center top/cover no-repeat;
+        .hero-img {
+            width: 100%; max-height: 85vh; object-fit: contain; display: block;
         }
-        .hero-overlay {
-            position: absolute; inset: 0;
-            background: linear-gradient(180deg, transparent 0%, transparent 40%, rgba(44,44,44,0.3) 65%, rgba(250,246,241,1) 100%);
-        }
-        .hero-content {
-            position: relative; z-index: 2; text-align: center; padding: 2rem;
-            max-width: 600px; margin-top: auto; margin-bottom: 4rem;
+        .hero-bottom {
+            position: relative; z-index: 2; text-align: center; padding: 2.5rem 2rem 3rem;
+            background: var(--bg); width: 100%;
         }
         .hero-sub {
             font-size: 1.1rem; color: rgba(255,255,255,0.9);
@@ -437,16 +436,14 @@
 
 <!-- Hero -->
 <section class="hero" id="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <p class="hero-sub">Filminsentivordningen må styrkes — nå. Norsk film har verdensklasse talent, men taper produksjoner til utlandet hver dag.</p>
+    <img src="images/hero-mountain.jpg" alt="Ja til No-Brainers — Norsk filmbransje sier" class="hero-img">
+    <div class="hero-bottom">
+        <p class="hero-sub" style="color: var(--text-light); margin-bottom: 1.5rem;">Filminsentivordningen må styrkes — nå. Norsk film har verdensklasse talent, men taper produksjoner til utlandet hver dag.</p>
         <div class="hero-btns">
             <a href="#handling" class="btn btn-fill">Signer oppropet</a>
-            <a href="#video" class="btn btn-outline">Se filmen</a>
+            <a href="#video" class="btn btn-dark-outline">Se filmen</a>
         </div>
     </div>
-    <div class="hero-scroll"><span>Scroll</span><div class="line"></div></div>
 </section>
 
 <!-- Stats -->
