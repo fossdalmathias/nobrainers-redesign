@@ -9,193 +9,520 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
         :root {
-            --bg: #FAF6F1; --bg-warm: #F0EBE3; --bg-card: #FFFFFF; --bg-dark: #2B2B2B;
-            --text: #2C2C2C; --text-light: #6B6560; --text-muted: #9A9490;
-            --sage: #5B7B6A; --sage-light: #E8EFEB; --brown: #8B6F4E; --brown-light: #F0E6D9;
-            --ocean: #3D5A6E; --ocean-light: #E2ECF0; --terra: #B85C38; --terra-light: #F5E6DF;
-            --sand: #D4C5B2; --cream: #FAF6F1; --border: #E8E2DA;
+            --bg: #FAF6F1;
+            --bg-warm: #F0EBE3;
+            --bg-card: #FFFFFF;
+            --bg-dark: #2B2B2B;
+            --text: #2C2C2C;
+            --text-light: #6B6560;
+            --text-muted: #9A9490;
+            --sage: #5B7B6A;
+            --sage-light: #E8EFEB;
+            --brown: #8B6F4E;
+            --brown-light: #F0E6D9;
+            --ocean: #3D5A6E;
+            --ocean-light: #E2ECF0;
+            --terra: #B85C38;
+            --terra-light: #F5E6DF;
+            --sand: #D4C5B2;
+            --cream: #FAF6F1;
+            --border: #E8E2DA;
             --font-heading: 'DM Serif Display', Georgia, serif;
             --font-body: 'DM Sans', -apple-system, sans-serif;
         }
+
         html { scroll-behavior: smooth; }
         body { font-family: var(--font-body); background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
 
-        .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.25rem 2rem; display: flex; align-items: center; justify-content: space-between; transition: all 0.4s ease; }
-        .navbar.scrolled { background: rgba(250,246,241,0.95); backdrop-filter: blur(16px); box-shadow: 0 1px 0 var(--border); padding: 0.75rem 2rem; }
-        .nav-logo { font-family: var(--font-heading); font-size: 1.4rem; text-decoration: none; color: var(--text); }
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 1.25rem 2rem;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: all 0.4s ease;
+        }
+        .navbar:not(.scrolled) .nav-logo,
+        .navbar:not(.scrolled) .nav-links a { color: white; }
+        .navbar:not(.scrolled) .lang-switch { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); }
+        .navbar:not(.scrolled) .nav-toggle span { background: white; }
+        .navbar.scrolled {
+            background: rgba(250, 246, 241, 0.95);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 1px 0 var(--border);
+            padding: 0.75rem 2rem;
+        }
+        .nav-logo {
+            font-family: var(--font-heading); font-size: 1.4rem;
+            text-decoration: none; color: var(--text); letter-spacing: -0.01em;
+        }
         .nav-logo .dot { color: var(--terra); }
         .nav-links { display: flex; list-style: none; gap: 2rem; align-items: center; }
-        .nav-links a { color: var(--text-light); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: color 0.3s; }
+        .nav-links a {
+            color: var(--text-light); text-decoration: none; font-size: 0.88rem;
+            font-weight: 500; transition: color 0.3s;
+        }
         .nav-links a:hover { color: var(--text); }
-        .nav-cta-btn { background: var(--terra); color: white !important; padding: 0.55rem 1.4rem; border-radius: 6px; font-weight: 600; transition: all 0.3s; }
-        .nav-cta-btn:hover { background: #a04e2e; }
-        .lang-switch { font-size: 0.8rem; color: var(--text-muted); border: 1px solid var(--border); padding: 0.3rem 0.7rem; border-radius: 4px; text-decoration: none; transition: all 0.3s; }
+        .nav-cta-btn {
+            background: var(--terra); color: white !important; padding: 0.55rem 1.4rem;
+            border-radius: 6px; font-weight: 600; transition: all 0.3s;
+        }
+        .nav-cta-btn:hover { background: #a04e2e; transform: translateY(-1px); }
+        .lang-switch {
+            font-size: 0.8rem; color: var(--text-muted); border: 1px solid var(--border);
+            padding: 0.3rem 0.7rem; border-radius: 4px; text-decoration: none; transition: all 0.3s;
+        }
         .lang-switch:hover { border-color: var(--text-light); color: var(--text); }
-        .nav-toggle { display: none; background: none; border: none; cursor: pointer; }
-        .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--text); margin: 5px 0; }
+        .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+        .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--text); margin: 5px 0; transition: 0.3s; }
 
-        .hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .hero-bg { position: absolute; inset: 0; background: url('images/hero-mountain.jpg') center/cover no-repeat; }
-        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(44,44,44,0.25) 0%, rgba(44,44,44,0.15) 40%, rgba(44,44,44,0.55) 80%, rgba(250,246,241,1) 100%); }
-        .hero-content { position: relative; z-index: 2; text-align: center; padding: 2rem; max-width: 800px; }
-        .hero-eyebrow { font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(255,255,255,0.8); margin-bottom: 1.5rem; }
-        .hero h1 { font-family: var(--font-heading); font-size: clamp(3rem, 8vw, 6.5rem); color: white; line-height: 0.95; margin-bottom: 1.5rem; }
-        .hero-sub { font-size: 1.15rem; color: rgba(255,255,255,0.85); max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.7; font-weight: 300; }
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            display: flex; flex-direction: column; align-items: center;
+            overflow: hidden; padding: 0;
+        }
+        .hero-img {
+            width: 100%; display: block; object-fit: cover;
+        }
+        .hero-bottom {
+            position: relative; z-index: 2; text-align: center; padding: 2.5rem 2rem 3rem;
+            background: var(--bg); width: 100%;
+        }
+        .hero-sub {
+            font-size: 1.1rem; color: rgba(255,255,255,0.9);
+            max-width: 500px; margin: 0 auto 2rem; line-height: 1.7; font-weight: 400;
+        }
         .hero-btns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
-        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.75rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.85rem 1.75rem; border-radius: 6px; font-weight: 600;
+            font-size: 0.9rem; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none;
+        }
         .btn-fill { background: var(--terra); color: white; }
         .btn-fill:hover { background: #a04e2e; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,92,56,0.3); }
         .btn-outline { background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(8px); }
         .btn-outline:hover { background: rgba(255,255,255,0.2); }
+        .btn-dark-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-dark-outline:hover { border-color: var(--text); }
+        .hero-scroll {
+            position: absolute; bottom: 6rem; left: 50%; transform: translateX(-50%); z-index: 2;
+            color: rgba(255,255,255,0.5); font-size: 0.7rem; text-transform: uppercase;
+            letter-spacing: 0.2em; text-align: center;
+        }
+        .hero-scroll .line { width: 1px; height: 40px; background: rgba(255,255,255,0.3); margin: 0.5rem auto 0; }
 
+        /* ===== SECTIONS ===== */
         section { padding: 6rem 2rem; }
         .container { max-width: 1100px; margin: 0 auto; }
-        .section-eyebrow { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--terra); margin-bottom: 0.75rem; }
-        .section-title { font-family: var(--font-heading); font-size: clamp(1.8rem, 3.5vw, 2.8rem); line-height: 1.15; margin-bottom: 1rem; }
-        .section-desc { font-size: 1.05rem; color: var(--text-light); max-width: 580px; line-height: 1.7; }
+        .section-eyebrow {
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.15em; color: var(--terra); margin-bottom: 0.75rem;
+        }
+        .section-title {
+            font-family: var(--font-heading); font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            line-height: 1.15; margin-bottom: 1rem; color: var(--text);
+        }
+        .section-desc {
+            font-size: 1.05rem; color: var(--text-light); max-width: 580px; line-height: 1.7;
+        }
 
+        /* ===== STATS ===== */
         .stats-section { background: var(--bg-warm); padding: 4rem 2rem; }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border-radius: 12px; overflow: hidden; max-width: 1100px; margin: 0 auto; }
-        .stat-cell { background: var(--bg-card); padding: 2.5rem 1.5rem; text-align: center; }
-        .stat-num { font-family: var(--font-heading); font-size: 2.8rem; line-height: 1; margin-bottom: 0.5rem; }
-        .stat-num.c-sage { color: var(--sage); } .stat-num.c-brown { color: var(--brown); } .stat-num.c-ocean { color: var(--ocean); } .stat-num.c-terra { color: var(--terra); }
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+            background: var(--border); border-radius: 12px; overflow: hidden;
+            max-width: 1100px; margin: 0 auto;
+        }
+        .stat-cell {
+            background: var(--bg-card); padding: 2.5rem 1.5rem; text-align: center;
+        }
+        .stat-num {
+            font-family: var(--font-heading); font-size: 2.8rem; line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        .stat-num.c-sage { color: var(--sage); }
+        .stat-num.c-brown { color: var(--brown); }
+        .stat-num.c-ocean { color: var(--ocean); }
+        .stat-num.c-terra { color: var(--terra); }
         .stat-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); margin-bottom: 0.25rem; }
         .stat-detail { font-size: 0.78rem; color: var(--text-muted); }
 
+        /* ===== PROBLEM ===== */
+        .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-top: 3rem; }
+        .bar-chart-minimal { display: flex; flex-direction: column; gap: 1.25rem; }
+        .bar-row { display: flex; align-items: center; gap: 1rem; }
+        .bar-country { width: 70px; font-size: 0.85rem; font-weight: 500; text-align: right; flex-shrink: 0; }
+        .bar-track { flex: 1; height: 32px; background: var(--bg-warm); border-radius: 4px; overflow: hidden; position: relative; }
+        .bar-fill { height: 100%; border-radius: 4px; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; }
+        .bar-val { font-size: 0.8rem; font-weight: 700; color: white; }
+        .bar-fill.sage { background: var(--sage); }
+        .bar-fill.ocean { background: var(--ocean); }
+        .bar-fill.brown { background: var(--brown); }
+        .bar-fill.terra { background: var(--terra); }
+        .problem-cards { display: flex; flex-direction: column; gap: 1rem; }
+        .p-card {
+            padding: 1.25rem 1.5rem; border-radius: 10px; border: 1px solid var(--border);
+            background: var(--bg-card); transition: all 0.3s;
+        }
+        .p-card:hover { border-color: var(--sand); transform: translateX(4px); }
+        .p-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .p-card p { font-size: 0.88rem; color: var(--text-light); line-height: 1.55; }
+
+        /* ===== ROI ===== */
+        .roi-section { background: var(--bg-warm); }
+        .roi-hero {
+            display: flex; align-items: center; gap: 3rem; margin: 3rem 0;
+            flex-wrap: wrap; justify-content: center;
+        }
+        .roi-big {
+            font-family: var(--font-heading); font-size: clamp(5rem, 10vw, 8rem);
+            color: var(--sage); line-height: 1;
+        }
+        .roi-text { max-width: 380px; }
+        .roi-text h3 { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.75rem; }
+        .roi-text p { color: var(--text-light); line-height: 1.65; }
+        .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem; }
+        .chart-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+            padding: 2rem; transition: all 0.3s;
+        }
+        .chart-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.06); }
+        .chart-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .chart-card .chart-desc { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+        .pie-wrap { display: flex; align-items: center; gap: 1.5rem; }
+        .pie-svg { width: 160px; height: 160px; flex-shrink: 0; }
+        .pie-legend { display: flex; flex-direction: column; gap: 0.45rem; }
+        .legend-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--text-light); }
+        .legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+        .progress-list { display: flex; flex-direction: column; gap: 1.25rem; }
+        .prog-item label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.4rem; }
+        .prog-item label span { color: var(--text-muted); font-weight: 400; }
+        .prog-track { height: 6px; background: var(--bg-warm); border-radius: 6px; overflow: hidden; }
+        .prog-fill { height: 100%; border-radius: 6px; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); width: 0; }
+
+        /* ===== INNSIKT (REPORTS) ===== */
+        .innsikt-section { background: var(--bg); }
+        .innsikt-header {
+            display: flex; gap: 2.5rem; align-items: center; margin-bottom: 2.5rem;
+        }
+        .innsikt-poster {
+            width: 160px; min-width: 160px; border-radius: 10px; overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+        .innsikt-poster img {
+            width: 100%; height: auto; display: block;
+        }
+        @media (max-width: 480px) {
+            .innsikt-header { flex-direction: column-reverse; text-align: center; }
+            .innsikt-poster { width: 130px; min-width: 130px; }
+            .innsikt-header .section-desc { margin: 0 auto; }
+        }
+        .report-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 2rem; }
+        .report-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+            padding: 2rem; transition: all 0.3s; display: flex; flex-direction: column;
+        }
+        .report-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.06); transform: translateY(-2px); }
+        .report-tag {
+            display: inline-block; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.1em; padding: 0.25rem 0.6rem; border-radius: 4px; margin-bottom: 1rem; width: fit-content;
+        }
+        .tag-sage { background: var(--sage-light); color: var(--sage); }
+        .tag-ocean { background: var(--ocean-light); color: var(--ocean); }
+        .tag-brown { background: var(--brown-light); color: var(--brown); }
+        .tag-terra { background: var(--terra-light); color: var(--terra); }
+        .report-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .report-card p { font-size: 0.88rem; color: var(--text-light); line-height: 1.6; flex: 1; }
+        .report-link {
+            display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 1rem;
+            font-size: 0.82rem; font-weight: 600; color: var(--terra); text-decoration: none;
+            transition: gap 0.3s;
+        }
+        .report-link:hover { gap: 0.6rem; }
+
+        /* ===== KEY FINDINGS ===== */
+        .findings-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+        .finding-card {
+            text-align: center; padding: 2rem 1.5rem; border-radius: 12px; background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+        .finding-num { font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 0.5rem; }
+
+        /* ===== VIDEO SECTION ===== */
         .video-section { background: var(--bg-warm); }
-        .video-wrapper { position: relative; max-width: 900px; margin: 2.5rem auto 0; border-radius: 12px; overflow: hidden; aspect-ratio: 16/9; border: 1px solid var(--border); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+        .video-wrapper {
+            position: relative; max-width: 900px; margin: 2.5rem auto 0;
+            border-radius: 12px; overflow: hidden; aspect-ratio: 16/9;
+            border: 1px solid var(--border); box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+        }
         .video-wrapper iframe { width: 100%; height: 100%; border: none; }
 
+        /* ===== KRAV (DEMANDS) ===== */
         .demands-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; }
-        .demand-card { padding: 2rem; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border); transition: all 0.3s; position: relative; }
+        .demand-card {
+            padding: 2rem; border-radius: 12px; background: var(--bg-card);
+            border: 1px solid var(--border); transition: all 0.3s; position: relative;
+        }
         .demand-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.06); transform: translateY(-2px); }
-        .demand-num { font-family: var(--font-heading); font-size: 2.5rem; color: var(--bg-warm); position: absolute; top: 1rem; right: 1.5rem; }
+        .demand-num {
+            font-family: var(--font-heading); font-size: 2.5rem; color: var(--bg-warm);
+            position: absolute; top: 1rem; right: 1.5rem;
+        }
         .demand-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; margin-top: 0.5rem; }
         .demand-card p { font-size: 0.9rem; color: var(--text-light); line-height: 1.6; }
         .demand-icon { font-size: 1.5rem; }
 
-        .final-cta { background: var(--bg-dark); color: white; text-align: center; padding: 6rem 2rem; position: relative; overflow: hidden; }
-        .final-cta::before { content: ''; position: absolute; inset: 0; background: url('images/stortinget.jpg') center/cover no-repeat; opacity: 0.15; }
+        /* ===== COMPARISON TABLE ===== */
+        .comparison-section { background: var(--bg-warm); }
+        .table-wrap {
+            margin-top: 2.5rem; border-radius: 12px; overflow: hidden;
+            border: 1px solid var(--border); background: var(--bg-card);
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            padding: 1rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted);
+            background: var(--bg-warm); border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); font-size: 0.9rem;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(0,0,0,0.01); }
+        .flag { font-size: 1.2rem; margin-right: 0.5rem; }
+        .badge {
+            display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px;
+            font-weight: 600; font-size: 0.82rem;
+        }
+        .badge-green { background: var(--sage-light); color: var(--sage); }
+        .badge-yellow { background: var(--brown-light); color: var(--brown); }
+        .badge-red { background: var(--terra-light); color: var(--terra); }
+        tr.highlight-row td { background: var(--terra-light); }
+
+        /* ===== CAMPAIGN IMAGE ===== */
+        .campaign-img-section { padding: 0 2rem; }
+        .campaign-img-wrap {
+            max-width: 1100px; margin: 0 auto; border-radius: 16px; overflow: hidden;
+            aspect-ratio: 16/10;
+        }
+        .campaign-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* ===== BIDRAGSYTERE ===== */
+        .contributors-section { background: var(--bg); }
+        .contrib-groups { margin-top: 2.5rem; }
+        .contrib-group { margin-bottom: 2.5rem; }
+        .contrib-group-title {
+            font-family: var(--font-heading); font-size: 1.2rem; margin-bottom: 1rem;
+            padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+        }
+        .contrib-list {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 0.35rem;
+        }
+        .contrib-item {
+            font-size: 0.88rem; color: var(--text-light); padding: 0.35rem 0;
+        }
+        .contrib-item strong { color: var(--text); font-weight: 600; }
+
+        /* ===== SUPPORTERS MARQUEE ===== */
+        .marquee-section { padding: 3rem 0; overflow: hidden; background: var(--bg-warm); }
+        .marquee-track {
+            display: flex; gap: 1.5rem; animation: marquee 35s linear infinite; width: max-content;
+        }
+        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .marquee-chip {
+            padding: 0.6rem 1.25rem; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 50px; white-space: nowrap; font-size: 0.82rem; font-weight: 500;
+            color: var(--text-light); flex-shrink: 0;
+        }
+
+        /* ===== FINAL CTA ===== */
+        .final-cta {
+            background: var(--bg-dark); color: white; text-align: center; padding: 6rem 2rem;
+            position: relative; overflow: hidden;
+        }
+        .final-cta::before {
+            content: ''; position: absolute; inset: 0;
+            background: url('images/stortinget.jpg') center/cover no-repeat; opacity: 0.15;
+        }
         .final-cta .container { position: relative; z-index: 2; }
         .final-cta .section-eyebrow { color: var(--sand); }
-        .final-cta .section-title { color: white; }
+        .final-cta .section-title { color: white; font-size: clamp(2rem, 4vw, 3rem); }
         .final-cta .section-desc { color: rgba(255,255,255,0.7); margin: 1rem auto 2.5rem; }
-        .social-row { display: flex; gap: 0.75rem; justify-content: center; margin-top: 1.5rem; }
-        .social-btn { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; text-decoration: none; color: rgba(255,255,255,0.7); font-size: 0.9rem; }
+        .final-cta .btn-fill { background: var(--terra); }
+        .final-cta .btn-fill:hover { background: #a04e2e; }
+        .social-row {
+            display: flex; gap: 0.75rem; justify-content: center; margin-top: 1.5rem;
+        }
+        .social-btn {
+            width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center;
+            justify-content: center; cursor: pointer; transition: all 0.3s;
+            text-decoration: none; color: rgba(255,255,255,0.7); font-size: 0.9rem;
+        }
         .social-btn:hover { background: var(--terra); border-color: var(--terra); color: white; }
 
-        footer { background: var(--bg-dark); color: rgba(255,255,255,0.5); padding: 2rem; border-top: 1px solid rgba(255,255,255,0.08); }
-        .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--bg-dark); color: rgba(255,255,255,0.5); padding: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .footer-inner {
+            max-width: 1100px; margin: 0 auto; display: flex;
+            justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+        }
         .footer-logo { font-family: var(--font-heading); font-size: 1.1rem; color: rgba(255,255,255,0.8); }
         .footer-logo .dot { color: var(--terra); }
         .footer-links { display: flex; gap: 1.5rem; list-style: none; }
         .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }
         .footer-links a:hover { color: white; }
 
-        .back-to-top { position: fixed; bottom: 1.5rem; right: 1.5rem; width: 44px; height: 44px; border-radius: 50%; background: var(--terra); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s; z-index: 99; box-shadow: 0 4px 12px rgba(184,92,56,0.3); }
+        /* ===== BACK TO TOP ===== */
+        .back-to-top {
+            position: fixed; bottom: 1.5rem; right: 1.5rem; width: 44px; height: 44px;
+            border-radius: 50%; background: var(--terra); color: white; border: none;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: all 0.3s; z-index: 99;
+            box-shadow: 0 4px 12px rgba(184,92,56,0.3);
+        }
         .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: scale(1.08); }
+
+        /* ===== REVEAL ===== */
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .problem-grid, .charts-row, .demands-grid, .report-grid { grid-template-columns: 1fr; }
+            .findings-row { grid-template-columns: 1fr; }
+        }
         @media (max-width: 768px) {
             .navbar { padding: 1rem 1.25rem; }
-            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; background: rgba(250,246,241,0.98); padding: 1.5rem; gap: 1rem; backdrop-filter: blur(16px); }
+            .nav-links {
+                display: none; position: absolute; top: 100%; left: 0; right: 0;
+                flex-direction: column; background: rgba(250,246,241,0.98); padding: 1.5rem;
+                gap: 1rem; backdrop-filter: blur(16px); border-bottom: 1px solid var(--border);
+            }
             .nav-links.active { display: flex; }
             .nav-toggle { display: block; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .demands-grid { grid-template-columns: 1fr; }
             section { padding: 4rem 1.25rem; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .pie-wrap { flex-direction: column; }
+            .roi-hero { text-align: center; }
+            .table-wrap { overflow-x: auto; }
+            table { min-width: 600px; }
+            .findings-row { grid-template-columns: 1fr 1fr; }
         }
-        @media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .findings-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
+<!-- Navbar -->
 <nav class="navbar" id="navbar">
-    <a href="en.html" class="nav-logo">no<span class="dot">.</span>brainers</a>
-    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    <a href="#" class="nav-logo">no<span class="dot">.</span>brainers</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
     <ul class="nav-links" id="navLinks">
-        <li><a href="#challenge">The Challenge</a></li>
-        <li><a href="#value">The Value</a></li>
-        <li><a href="#demands">Our Demands</a></li>
-        <li><a href="#film">Film</a></li>
+        <li><a href="#problemet">The Challenge</a></li>
+        <li><a href="#verdien">The Value</a></li>
+        <li><a href="#innsikt">Insights</a></li>
+        <li><a href="#kravene">Demands</a></li>
+        <li><a href="#bidragsytere">Contributors</a></li>
         <li><a href="index.html" class="lang-switch">NO</a></li>
-        <li><a href="#action" class="nav-cta-btn">Take Action</a></li>
+        <li><a href="#handling" class="nav-cta-btn">Sign the petition</a></li>
     </ul>
 </nav>
 
-<section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <p class="hero-eyebrow">The Norwegian film industry says</p>
-        <h1>Yes to<br>No-Brainers</h1>
-        <p class="hero-sub">Norway's film incentive scheme must be strengthened — now. Norwegian film has world-class talent, but is losing productions to other countries every day.</p>
+<!-- Hero -->
+<section class="hero" id="hero">
+    <img src="images/hero-mountain.jpg" alt="Yes to No-Brainers — The Norwegian film industry says" class="hero-img">
+    <div class="hero-bottom">
+        <p class="hero-sub" style="color: var(--text-light); margin-bottom: 1.5rem;">The film incentive scheme must be strengthened — now. Norwegian film has world-class talent, but is losing productions to other countries every day.</p>
         <div class="hero-btns">
-            <a href="#action" class="btn btn-fill">Sign the petition</a>
-            <a href="#film" class="btn btn-outline">Watch the film</a>
+            <a href="#handling" class="btn btn-fill">Sign the petition</a>
+            <a href="#video" class="btn btn-dark-outline">Watch the film</a>
         </div>
     </div>
 </section>
 
+<!-- Stats -->
 <div class="stats-section">
     <div class="stats-grid">
-        <div class="stat-cell reveal"><div class="stat-num c-sage" data-target="4.7" data-suffix="x" data-decimals="1">0</div><div class="stat-label">Return</div><div class="stat-detail">Per krone invested</div></div>
-        <div class="stat-cell reveal"><div class="stat-num c-brown" data-target="1.9" data-suffix=" bn" data-decimals="1">0</div><div class="stat-label">Tax Revenue</div><div class="stat-detail">Direct return</div></div>
-        <div class="stat-cell reveal"><div class="stat-num c-ocean" data-target="8200" data-suffix="+" data-decimals="0">0</div><div class="stat-label">Jobs</div><div class="stat-detail">In Norwegian film & TV</div></div>
-        <div class="stat-cell reveal"><div class="stat-num c-terra" data-target="25" data-suffix="%" data-decimals="0">0</div><div class="stat-label">Norway's Rate</div><div class="stat-detail">Vs. 30–40% in neighbors</div></div>
+        <div class="stat-cell reveal">
+            <div class="stat-num c-sage" data-target="4.7" data-suffix="x" data-decimals="1">0</div>
+            <div class="stat-label">Return</div>
+            <div class="stat-detail">Per krone invested</div>
+        </div>
+        <div class="stat-cell reveal">
+            <div class="stat-num c-brown" data-target="1.9" data-suffix=" bn" data-decimals="1">0</div>
+            <div class="stat-label">Tax Revenue</div>
+            <div class="stat-detail">Direct return</div>
+        </div>
+        <div class="stat-cell reveal">
+            <div class="stat-num c-ocean" data-target="8200" data-suffix="+" data-decimals="0">0</div>
+            <div class="stat-label">Jobs</div>
+            <div class="stat-detail">In Norwegian film & TV</div>
+        </div>
+        <div class="stat-cell reveal">
+            <div class="stat-num c-terra" data-target="25" data-suffix="%" data-decimals="0">0</div>
+            <div class="stat-label">Norway's Rate</div>
+            <div class="stat-detail">Vs. 30–40% in neighbors</div>
+        </div>
     </div>
 </div>
 
-<section id="challenge">
+<!-- Problem -->
+<section id="problemet">
     <div class="container">
         <div class="reveal">
             <p class="section-eyebrow">The Challenge</p>
-            <h2 class="section-title">Norway is falling behind in the<br>competition for productions</h2>
-            <p class="section-desc">While neighboring countries strengthen their film incentives, Norway stands still. The result: productions that could create value here are moving abroad.</p>
+            <h2 class="section-title">Norway is falling behind in the race<br>for productions</h2>
+            <p class="section-desc">While neighboring countries strengthen their film incentives, Norway stands still. The result is that productions that could create value here move abroad.</p>
+        </div>
+        <div class="problem-grid">
+            <div class="reveal">
+                <div class="bar-chart-minimal" id="barChart">
+                    <div class="bar-row"><span class="bar-country">Iceland</span><div class="bar-track"><div class="bar-fill sage" data-width="100%"><span class="bar-val">40%</span></div></div></div>
+                    <div class="bar-row"><span class="bar-country">Ireland</span><div class="bar-track"><div class="bar-fill ocean" data-width="87%"><span class="bar-val">35%</span></div></div></div>
+                    <div class="bar-row"><span class="bar-country">Finland</span><div class="bar-track"><div class="bar-fill brown" data-width="75%"><span class="bar-val">30%</span></div></div></div>
+                    <div class="bar-row"><span class="bar-country">Sweden</span><div class="bar-track"><div class="bar-fill brown" data-width="75%"><span class="bar-val">30%</span></div></div></div>
+                    <div class="bar-row"><span class="bar-country"><strong>Norway</strong></span><div class="bar-track"><div class="bar-fill terra" data-width="62%"><span class="bar-val">25%</span></div></div></div>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem;">Source: Olsberg SPI Global Incentives Index, Nov. 2025</p>
+            </div>
+            <div class="problem-cards reveal">
+                <div class="p-card">
+                    <h4>Lowest in the Nordics</h4>
+                    <p>Norway's incentive scheme at 25% is the lowest among Nordic countries, and well below the European average.</p>
+                </div>
+                <div class="p-card">
+                    <h4>Lack of predictability</h4>
+                    <p>The scheme has no guarantee of sufficient funding, making it impossible to plan large-scale productions.</p>
+                </div>
+                <div class="p-card">
+                    <h4>Productions are fleeing</h4>
+                    <p>International productions choose neighboring countries over Norway — and with them go jobs and expertise.</p>
+                </div>
+                <div class="p-card">
+                    <h4>Lost value creation</h4>
+                    <p>Billions in potential revenue, tourism and cultural exports are lost every single year.</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<section id="value" style="background: var(--bg-warm);">
-    <div class="container">
-        <div class="reveal" style="text-align: center;">
-            <p class="section-eyebrow">The Value</p>
-            <h2 class="section-title">Film is good business for all of Norway</h2>
-            <p class="section-desc" style="margin: 0.5rem auto 0;">For every krone the state refunds through the incentive scheme, 4.7 kroner return to society. At least 1.9 kroner come back directly through taxes and fees.</p>
-        </div>
-    </div>
-</section>
-
-<section id="demands">
-    <div class="container">
-        <div class="reveal" style="text-align: center;">
-            <p class="section-eyebrow">Our Demands</p>
-            <h2 class="section-title">Four measures that will change everything</h2>
-        </div>
-        <div class="demands-grid">
-            <div class="demand-card reveal"><div class="demand-num">01</div><div class="demand-icon">&#9670;</div><h3>Predictability</h3><p>The scheme must have sufficient and predictable funding so productions can plan long-term. Today's uncertainty drives away investments.</p></div>
-            <div class="demand-card reveal"><div class="demand-num">02</div><div class="demand-icon">&#9670;</div><h3>International Competitiveness</h3><p>The incentive level must increase to at least 30% to match neighboring countries. 25% is not enough when Iceland offers 40% and Finland 30%.</p></div>
-            <div class="demand-card reveal"><div class="demand-num">03</div><div class="demand-icon">&#9670;</div><h3>Access for Norwegian Projects</h3><p>Norwegian productions with international potential must also be able to use the scheme, not just foreign productions.</p></div>
-            <div class="demand-card reveal"><div class="demand-num">04</div><div class="demand-icon">&#9670;</div><h3>Sustainable Production</h3><p>The incentive scheme should promote environmentally friendly film production and help the Norwegian industry lead the green transition.</p></div>
-        </div>
-    </div>
-</section>
-
-<section class="video-section" id="film">
-    <div class="container">
-        <div class="reveal" style="text-align: center;">
-            <p class="section-eyebrow">Documentary</p>
-            <h2 class="section-title">When film comes to the village</h2>
-        </div>
-        <div class="video-wrapper reveal">
-            <iframe src="https://player.vimeo.com/video/1160150795?h=&title=0&byline=0&portrait=0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-</section>
-
-<section style="background: var(--bg);">
+<!-- Campaign Film -->
+<section style="background: var(--bg-warm);">
     <div class="container">
         <div class="reveal" style="text-align: center;">
             <p class="section-eyebrow">Campaign Film</p>
@@ -207,25 +534,326 @@
     </div>
 </section>
 
-<section class="final-cta" id="action">
+<!-- ROI / The Value -->
+<section class="roi-section" id="verdien">
     <div class="container">
-        <div class="reveal">
-            <p class="section-eyebrow">Take Action</p>
-            <h2 class="section-title">Norwegian film needs your voice now</h2>
-            <p class="section-desc">Join the campaign. Share the message. Contact your representative. Together we can secure the future of Norwegian film.</p>
-            <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
-                <a href="#" class="btn btn-fill">Sign the petition</a>
-                <a href="mailto:kontakt@nobrainers.no" class="btn" style="background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2);">Contact us</a>
+        <div class="reveal" style="text-align: center;">
+            <p class="section-eyebrow">The Value</p>
+            <h2 class="section-title">Film is good business for all of Norway</h2>
+        </div>
+        <div class="roi-hero reveal">
+            <div class="roi-big">4.7x</div>
+            <div class="roi-text">
+                <h3>Return per krone</h3>
+                <p>For every krone the state refunds through the incentive scheme, 4.7 kroner return to society. At least 1.9 kroner return directly through taxes and fees.</p>
             </div>
-            <div class="social-row">
-                <a href="https://www.facebook.com/profile.php?id=61585225295085" target="_blank" class="social-btn">f</a>
-                <a href="https://www.instagram.com/nobrainers.no" target="_blank" class="social-btn">ig</a>
-                <a href="https://www.snapchat.com/lens/63a2c358b7084ecb8adeb96334648b66?type=SNAPCODE&metadata=01" target="_blank" class="social-btn">sc</a>
+        </div>
+        <div class="charts-row">
+            <div class="chart-card reveal">
+                <h3>Where the money returns</h3>
+                <p class="chart-desc">Distribution of socioeconomic benefits</p>
+                <div class="pie-wrap">
+                    <svg class="pie-svg" viewBox="0 0 42 42">
+                        <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="var(--terra)" stroke-width="6" stroke-dasharray="36 64" stroke-dashoffset="25"/>
+                        <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="var(--brown)" stroke-width="6" stroke-dasharray="25 75" stroke-dashoffset="89"/>
+                        <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="var(--sage)" stroke-width="6" stroke-dasharray="19 81" stroke-dashoffset="64"/>
+                        <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="var(--ocean)" stroke-width="6" stroke-dasharray="11 89" stroke-dashoffset="45"/>
+                        <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="var(--sand)" stroke-width="6" stroke-dasharray="9 91" stroke-dashoffset="34"/>
+                        <text x="21" y="22" text-anchor="middle" font-size="5" font-weight="700" fill="var(--text)" font-family="DM Serif Display">4.7x</text>
+                    </svg>
+                    <div class="pie-legend">
+                        <div class="legend-row"><div class="legend-dot" style="background:var(--terra)"></div>Direct taxes — 36%</div>
+                        <div class="legend-row"><div class="legend-dot" style="background:var(--brown)"></div>Local spending — 25%</div>
+                        <div class="legend-row"><div class="legend-dot" style="background:var(--sage)"></div>Tourism effect — 19%</div>
+                        <div class="legend-row"><div class="legend-dot" style="background:var(--ocean)"></div>Skills development — 11%</div>
+                        <div class="legend-row"><div class="legend-dot" style="background:var(--sand)"></div>Cultural exports — 9%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-card reveal">
+                <h3>Impact of film production</h3>
+                <p class="chart-desc">Socioeconomic impact</p>
+                <div class="progress-list">
+                    <div class="prog-item"><label>Local employment <span>85%</span></label><div class="prog-track"><div class="prog-fill" data-width="85%" style="background:var(--sage)"></div></div></div>
+                    <div class="prog-item"><label>Hotels & restaurants <span>72%</span></label><div class="prog-track"><div class="prog-fill" data-width="72%" style="background:var(--brown)"></div></div></div>
+                    <div class="prog-item"><label>Transport & logistics <span>64%</span></label><div class="prog-track"><div class="prog-fill" data-width="64%" style="background:var(--ocean)"></div></div></div>
+                    <div class="prog-item"><label>Tourism (long-term) <span>58%</span></label><div class="prog-track"><div class="prog-fill" data-width="58%" style="background:var(--terra)"></div></div></div>
+                    <div class="prog-item"><label>Technical equipment suppliers <span>45%</span></label><div class="prog-track"><div class="prog-fill" data-width="45%" style="background:var(--sand)"></div></div></div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- Research & Reports -->
+<section class="innsikt-section" id="innsikt">
+    <div class="container">
+        <div class="innsikt-header">
+            <div class="reveal">
+                <p class="section-eyebrow">Research & Data</p>
+                <h2 class="section-title">What the reports show</h2>
+                <p class="section-desc">Four key reports document the value of a strengthened film incentive scheme — and the consequences of standing still.</p>
+            </div>
+            <div class="innsikt-poster reveal">
+                <img src="images/innsikt-hero.jpg" alt="Yes to No-Brainers" loading="lazy">
+            </div>
+        </div>
+
+        <div class="report-grid">
+            <div class="report-card reveal">
+                <span class="report-tag tag-sage">Olsberg SPI</span>
+                <h3>Global Incentives Index 2025</h3>
+                <p>Olsberg SPI's biannual overview of global film incentives shows that Norway at 25% sits significantly below the European average. Iceland (40%), Ireland (35%) and Finland (30%) compete fiercely for the same productions.</p>
+                <a href="https://www.o-spi.com/projects/blog-global-incentives-index" target="_blank" class="report-link">Read more &rarr;</a>
+            </div>
+            <div class="report-card reveal">
+                <span class="report-tag tag-ocean">Government</span>
+                <h3>Norway Incentive Impact Study 2023</h3>
+                <p>The government's own impact analysis documents that for every krone invested in the incentive scheme, 4.7 kroner in socioeconomic value is generated. At least 1.9 kroner return directly through taxes and fees.</p>
+                <a href="https://www.regjeringen.no/contentassets/55056a5b5b4a4a40a070dcf0c41700fb/norway-incentive-impact-study-final-report-2023-02-24.pdf" target="_blank" class="report-link">Download report &rarr;</a>
+            </div>
+            <div class="report-card reveal">
+                <span class="report-tag tag-brown">Olsberg SPI</span>
+                <h3>Special Report: Norway in Context</h3>
+                <p>Olsberg SPI's in-depth analysis from November 2025 compares Norway's incentive scheme directly with competitor countries and shows that Norway risks falling even further behind without immediate action.</p>
+                <a href="https://nobrainers.no/wp-content/uploads/2026/02/Global-Incentives-Index_Olsberg_Nov-2025.pdf" target="_blank" class="report-link">Download report &rarr;</a>
+            </div>
+            <div class="report-card reveal">
+                <span class="report-tag tag-terra">NFI</span>
+                <h3>The Incentive Scheme — Allocations</h3>
+                <p>The Norwegian Film Institute's overview shows which productions have received support — from Troll 2 to the Star Trek series via Storm Studios. The scheme attracts major international productions, but the budget limits its potential.</p>
+                <a href="https://www.nfi.no/tilskudd/insentiv/insentivordningen-2023" target="_blank" class="report-link">View allocations &rarr;</a>
+            </div>
+        </div>
+
+        <div class="findings-row">
+            <div class="finding-card reveal">
+                <div class="finding-num c-sage">4.7x</div>
+                <div class="stat-label">Socioeconomic return</div>
+                <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.5rem;">Per krone invested in film incentives</p>
+            </div>
+            <div class="finding-card reveal">
+                <div class="finding-num c-terra">32.9M</div>
+                <div class="stat-label">Largest single allocation</div>
+                <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.5rem;">To Mile Zero (André Øvredal) in 2025</p>
+            </div>
+            <div class="finding-card reveal">
+                <div class="finding-num c-ocean">80+</div>
+                <div class="stat-label">Countries with film incentives</div>
+                <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.5rem;">Norway is one of few not increasing its rate</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Video: When film comes to the village -->
+<section class="video-section" id="video">
+    <div class="container">
+        <div class="reveal" style="text-align: center;">
+            <p class="section-eyebrow">Documentary</p>
+            <h2 class="section-title">When film comes to the village</h2>
+            <p class="section-desc" style="margin: 0.5rem auto 0;">Stories from local communities across Norway that are touched by film production.</p>
+        </div>
+        <div class="video-wrapper reveal">
+            <iframe src="https://player.vimeo.com/video/1160150795?h=&title=0&byline=0&portrait=0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+        </div>
+    </div>
+</section>
+
+<!-- Demands -->
+<section id="kravene">
+    <div class="container">
+        <div class="reveal" style="text-align: center;">
+            <p class="section-eyebrow">Our Demands</p>
+            <h2 class="section-title">Four measures that will change everything</h2>
+            <p class="section-desc" style="margin: 0.5rem auto 0;">Concrete measures that will make Norway competitive and ensure a sustainable film industry.</p>
+        </div>
+        <div class="demands-grid">
+            <div class="demand-card reveal">
+                <div class="demand-num">01</div>
+                <div class="demand-icon">&#9670;</div>
+                <h3>Predictability</h3>
+                <p>The scheme must have sufficient and predictable funding so that productions can plan long-term. Today's uncertainty scares away investments.</p>
+            </div>
+            <div class="demand-card reveal">
+                <div class="demand-num">02</div>
+                <div class="demand-icon">&#9670;</div>
+                <h3>International competitiveness</h3>
+                <p>The incentive rate must be increased to a minimum of 30% to match neighboring countries. 25% is not enough when Iceland offers 40% and Finland 30%.</p>
+            </div>
+            <div class="demand-card reveal">
+                <div class="demand-num">03</div>
+                <div class="demand-icon">&#9670;</div>
+                <h3>Access for Norwegian projects</h3>
+                <p>Norwegian productions with international potential must also be able to use the scheme, not just foreign productions.</p>
+            </div>
+            <div class="demand-card reveal">
+                <div class="demand-num">04</div>
+                <div class="demand-icon">&#9670;</div>
+                <h3>Sustainable production</h3>
+                <p>The incentive scheme should promote environmentally friendly film production and help the Norwegian industry lead the way in green transition.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Comparison -->
+<section class="comparison-section" id="sammenligning">
+    <div class="container">
+        <div class="reveal" style="text-align: center;">
+            <p class="section-eyebrow">Comparison</p>
+            <h2 class="section-title">Norway vs. the competition</h2>
+        </div>
+        <div class="table-wrap reveal">
+            <table>
+                <thead>
+                    <tr><th>Country</th><th>Incentive Rate</th><th>Predictability</th><th>Annual Budget</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><span class="flag">&#127470;&#127480;</span>Iceland</td><td><span class="badge badge-green">40%</span></td><td>Legislated</td><td>Unlimited</td></tr>
+                    <tr><td><span class="flag">&#127470;&#127466;</span>Ireland</td><td><span class="badge badge-green">35%</span></td><td>Legislated</td><td>Unlimited</td></tr>
+                    <tr><td><span class="flag">&#127467;&#127470;</span>Finland</td><td><span class="badge badge-yellow">30%</span></td><td>Predictable</td><td>~€30M</td></tr>
+                    <tr><td><span class="flag">&#127480;&#127466;</span>Sweden</td><td><span class="badge badge-yellow">30%</span></td><td>Reasonable</td><td>~€20M</td></tr>
+                    <tr class="highlight-row"><td><span class="flag">&#127475;&#127476;</span><strong>Norway</strong></td><td><span class="badge badge-red">25%</span></td><td>Uncertain</td><td>~NOK 100M</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- Campaign Image -->
+<div class="campaign-img-section reveal" style="padding-top: 4rem; padding-bottom: 0;">
+    <div class="campaign-img-wrap">
+        <img src="images/stortinget.jpg" alt="Yes to No-Brainers in front of the Storting" loading="lazy">
+    </div>
+</div>
+
+<!-- Contributors -->
+<section class="contributors-section" id="bidragsytere">
+    <div class="container">
+        <div class="reveal">
+            <p class="section-eyebrow">Contributors</p>
+            <h2 class="section-title">The people behind the campaign</h2>
+            <p class="section-desc">A united industry of actors, directors, cinematographers, technicians, mayors and local communities across Norway.</p>
+        </div>
+        <div class="contrib-groups reveal">
+            <div class="contrib-group">
+                <h3 class="contrib-group-title">Rauma</h3>
+                <div class="contrib-list">
+                    <div class="contrib-item"><strong>Ingrid Bolsø Berdal</strong> — Actor</div>
+                    <div class="contrib-item"><strong>Jens Edgar Haugen</strong> — Director</div>
+                    <div class="contrib-item"><strong>Oskar Dalsbakken</strong> — DOP</div>
+                    <div class="contrib-item"><strong>Thor Erik Løkken</strong> — Gaffer</div>
+                    <div class="contrib-item"><strong>Håvard Holtop</strong> — Lighting Assistant</div>
+                    <div class="contrib-item"><strong>Jakob Mjøs</strong> — Lighting Assistant</div>
+                    <div class="contrib-item"><strong>Kenneth Gustavsen</strong> — Sound</div>
+                    <div class="contrib-item"><strong>Eirik Holst Ågaard</strong> — Focus Puller</div>
+                    <div class="contrib-item"><strong>Phillip Borgli</strong> — Camera Assistant</div>
+                    <div class="contrib-item"><strong>Petter Alnes-Bonesmo</strong> — Production Asst.</div>
+                    <div class="contrib-item"><strong>Arve Horgheim</strong> — Location Scout</div>
+                    <div class="contrib-item"><strong>Yvonne Wold</strong> — Mayor of Rauma</div>
+                    <div class="contrib-item"><strong>Stian Reinhardsen</strong> — Carpenter</div>
+                    <div class="contrib-item"><strong>Renate Remmen Næss</strong> — Hen Mother</div>
+                    <div class="contrib-item"><strong>Steinar Løite</strong> — Receptionist, Grand Hotel</div>
+                    <div class="contrib-item"><strong>Waiter</strong> — Mama Rosa</div>
+                    <div class="contrib-item"><strong>Kamerautleien</strong></div>
+                    <div class="contrib-item"><strong>Dagslys</strong></div>
+                    <div class="contrib-item"><strong>Shortcut Norge</strong> — Grade</div>
+                    <div class="contrib-item"><strong>Magnus Vanem</strong> — Editor</div>
+                </div>
+            </div>
+            <div class="contrib-group">
+                <h3 class="contrib-group-title">Animation</h3>
+                <div class="contrib-list">
+                    <div class="contrib-item"><strong>Qvisten Animasjon</strong></div>
+                    <div class="contrib-item"><strong>Arnt Christian Scheele</strong> — Qvisten</div>
+                    <div class="contrib-item"><strong>Roy Ranheim Kristoffersen</strong> — Qvisten</div>
+                    <div class="contrib-item"><strong>Dennis Storhøi</strong> — Voice Artist</div>
+                </div>
+            </div>
+            <div class="contrib-group">
+                <h3 class="contrib-group-title">Frøya</h3>
+                <div class="contrib-list">
+                    <div class="contrib-item"><strong>Kristin Furunes Strømskag</strong> — Mayor of Frøya</div>
+                    <div class="contrib-item"><strong>Mona Elisabeth Olsen Skarsvåg</strong> — Frøya Municipality</div>
+                    <div class="contrib-item"><strong>Lill Kristin Krutvik</strong> — Coop Frøya</div>
+                    <div class="contrib-item"><strong>Stig Bremnes</strong> — Hotel Frøya</div>
+                    <div class="contrib-item"><strong>Runar Sivertsen</strong> — Salmar</div>
+                    <div class="contrib-item"><strong>Jens Edgar Haugen</strong> — Director</div>
+                    <div class="contrib-item"><strong>Olaffur Johnson</strong> — Cinematographer</div>
+                    <div class="contrib-item"><strong>Kenneth Gustafsen</strong> — Sound</div>
+                    <div class="contrib-item"><strong>Thor Erik Løkken</strong> — Lighting</div>
+                </div>
+            </div>
+            <div class="contrib-group">
+                <h3 class="contrib-group-title">Other</h3>
+                <div class="contrib-list">
+                    <div class="contrib-item"><strong>Åse Kringstad</strong> — Virke</div>
+                    <div class="contrib-item"><strong>Jenny Hauga</strong> — Design</div>
+                    <div class="contrib-item"><strong>Midgard Filmkommisjon</strong></div>
+                    <div class="contrib-item"><strong>Vestnorsk filmsenter</strong></div>
+                    <div class="contrib-item"><strong>Monolith</strong></div>
+                    <div class="contrib-item"><strong>Motion Blur</strong></div>
+                    <div class="contrib-item"><strong>Jonas Fylling Christiansen</strong> — Drone</div>
+                    <div class="contrib-item"><strong>Håvard Dyrø</strong> — Drone</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Supporters marquee -->
+<div class="marquee-section">
+    <div class="marquee-track">
+        <div class="marquee-chip">Virke Produsentforeningen</div>
+        <div class="marquee-chip">Norsk Filmforbund</div>
+        <div class="marquee-chip">Norsk Skuespillerforbund</div>
+        <div class="marquee-chip">Den Norske Filmfestivalen</div>
+        <div class="marquee-chip">Nordisk Film & TV Fond</div>
+        <div class="marquee-chip">Norske Filmregissører</div>
+        <div class="marquee-chip">Norske Filmdistributørers Forening</div>
+        <div class="marquee-chip">Film & Kino</div>
+        <div class="marquee-chip">Midgard Filmkommisjon</div>
+        <div class="marquee-chip">Vestnorsk filmsenter</div>
+        <div class="marquee-chip">Qvisten Animasjon</div>
+        <div class="marquee-chip">Motion Blur</div>
+        <!-- duplicate for seamless -->
+        <div class="marquee-chip">Virke Produsentforeningen</div>
+        <div class="marquee-chip">Norsk Filmforbund</div>
+        <div class="marquee-chip">Norsk Skuespillerforbund</div>
+        <div class="marquee-chip">Den Norske Filmfestivalen</div>
+        <div class="marquee-chip">Nordisk Film & TV Fond</div>
+        <div class="marquee-chip">Norske Filmregissører</div>
+        <div class="marquee-chip">Norske Filmdistributørers Forening</div>
+        <div class="marquee-chip">Film & Kino</div>
+        <div class="marquee-chip">Midgard Filmkommisjon</div>
+        <div class="marquee-chip">Vestnorsk filmsenter</div>
+        <div class="marquee-chip">Qvisten Animasjon</div>
+        <div class="marquee-chip">Motion Blur</div>
+    </div>
+</div>
+
+<!-- Final CTA -->
+<section class="final-cta" id="handling">
+    <div class="container">
+        <div class="reveal">
+            <p class="section-eyebrow">Take Action</p>
+            <h2 class="section-title">Norwegian film needs your voice now</h2>
+            <p class="section-desc">Join the campaign. Share the message. Contact your representative. Together we can secure the future of Norwegian film.</p>
+            <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+                <a href="#" class="btn btn-fill">Sign the petition</a>
+                <a href="mailto:kontakt@nobrainers.no" class="btn" style="background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2);">Contact us</a>
+            </div>
+            <div class="social-row">
+                <a href="https://www.facebook.com/profile.php?id=61585225295085" target="_blank" class="social-btn" aria-label="Facebook">f</a>
+                <a href="https://www.instagram.com/nobrainers.no" target="_blank" class="social-btn" aria-label="Instagram">ig</a>
+                <a href="https://www.snapchat.com/lens/63a2c358b7084ecb8adeb96334648b66?type=SNAPCODE&metadata=01" target="_blank" class="social-btn" aria-label="Snapchat">sc</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
 <footer>
     <div class="footer-inner">
         <div class="footer-logo">no<span class="dot">.</span>brainers</div>
@@ -233,29 +861,64 @@
         <ul class="footer-links">
             <li><a href="https://www.facebook.com/profile.php?id=61585225295085" target="_blank">Facebook</a></li>
             <li><a href="https://www.instagram.com/nobrainers.no" target="_blank">Instagram</a></li>
+            <li><a href="https://www.snapchat.com/lens/63a2c358b7084ecb8adeb96334648b66?type=SNAPCODE&metadata=01" target="_blank">Snapchat</a></li>
             <li><a href="index.html">Norsk</a></li>
         </ul>
     </div>
 </footer>
 
+<!-- Back to top -->
 <button class="back-to-top" id="backToTop" aria-label="Back to top">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
 <script>
+// Navbar
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 60));
-document.getElementById('navToggle').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('active'));
-document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('active')));
-const obs = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.12 });
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-document.querySelectorAll('.stat-num[data-target]').forEach(el => {
-    new IntersectionObserver(([e]) => { if (!e.isIntersecting) return; const t=parseFloat(el.dataset.target),s=el.dataset.suffix||'',d=+el.dataset.decimals||0,st=performance.now(); (function tick(n){const p=Math.min((n-st)/1800,1);el.textContent=(t*(1-Math.pow(1-p,3))).toFixed(d)+s;if(p<1)requestAnimationFrame(tick)})(st); }, { threshold: 0.5 }).observe(el);
+
+// Mobile menu
+document.getElementById('navToggle').addEventListener('click', () => {
+    document.getElementById('navLinks').classList.toggle('active');
 });
+document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('active')));
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Counter
+document.querySelectorAll('.stat-num[data-target]').forEach(el => {
+    new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return;
+        const t = parseFloat(el.dataset.target), s = el.dataset.suffix || '', d = +el.dataset.decimals || 0;
+        const start = performance.now();
+        (function tick(now) {
+            const p = Math.min((now - start) / 1800, 1);
+            el.textContent = (t * (1 - Math.pow(1 - p, 3))).toFixed(d) + s;
+            if (p < 1) requestAnimationFrame(tick);
+        })(start);
+        obs.unobserve(el); // reuse main obs reference — safe since this is a one-shot
+    }, { threshold: 0.5 }).observe(el);
+});
+
+// Progress bars + bar chart
+const fillObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.style.width = e.target.dataset.width; fillObs.unobserve(e.target); } });
+}, { threshold: 0.3 });
+document.querySelectorAll('.prog-fill, .bar-fill').forEach(el => { el.style.width = '0'; fillObs.observe(el); });
+
+// Back to top
 const btt = document.getElementById('backToTop');
 window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 400));
 btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); const t=document.querySelector(a.getAttribute('href')); if(t) t.scrollIntoView({behavior:'smooth'}); }));
+
+// Smooth anchors
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => { e.preventDefault(); const t = document.querySelector(a.getAttribute('href')); if (t) t.scrollIntoView({ behavior: 'smooth' }); });
+});
 </script>
 </body>
 </html>
