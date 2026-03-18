@@ -204,12 +204,20 @@
 
         /* ===== INNSIKT (REPORTS) ===== */
         .innsikt-section { background: var(--bg); }
-        .innsikt-hero {
-            position: relative; border-radius: 16px; overflow: hidden; margin-bottom: 3rem;
-            aspect-ratio: 21/9;
+        .innsikt-header {
+            display: flex; gap: 2.5rem; align-items: center; margin-bottom: 2.5rem;
         }
-        .innsikt-hero img {
-            width: 100%; height: 100%; object-fit: cover; display: block;
+        .innsikt-poster {
+            width: 160px; min-width: 160px; border-radius: 10px; overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+        .innsikt-poster img {
+            width: 100%; height: auto; display: block;
+        }
+        @media (max-width: 480px) {
+            .innsikt-header { flex-direction: column-reverse; text-align: center; }
+            .innsikt-poster { width: 130px; min-width: 130px; }
+            .innsikt-header .section-desc { margin: 0 auto; }
         }
         .report-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 2rem; }
         .report-card {
@@ -513,6 +521,19 @@
     </div>
 </section>
 
+<!-- Kampanjefilm -->
+<section style="background: var(--bg-warm);">
+    <div class="container">
+        <div class="reveal" style="text-align: center;">
+            <p class="section-eyebrow">Kampanjefilmen</p>
+            <h2 class="section-title">Se hele kampanjefilmen</h2>
+        </div>
+        <div class="video-wrapper reveal">
+            <iframe src="https://player.vimeo.com/video/1154480558?h=&title=0&byline=0&portrait=0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+        </div>
+    </div>
+</section>
+
 <!-- ROI / Verdien -->
 <section class="roi-section" id="verdien">
     <div class="container">
@@ -567,14 +588,15 @@
 <!-- Innsikt og rapporter -->
 <section class="innsikt-section" id="innsikt">
     <div class="container">
-        <div class="innsikt-hero reveal">
-            <img src="images/innsikt-hero.jpg" alt="Innsikt og Kampanje" loading="lazy">
-        </div>
-
-        <div class="reveal">
-            <p class="section-eyebrow">Forskning & data</p>
-            <h2 class="section-title">Hva rapportene viser</h2>
-            <p class="section-desc">Fire sentrale rapporter dokumenterer verdien av en styrket filminsentivordning — og konsekvensene av å stå stille.</p>
+        <div class="innsikt-header">
+            <div class="reveal">
+                <p class="section-eyebrow">Forskning & data</p>
+                <h2 class="section-title">Hva rapportene viser</h2>
+                <p class="section-desc">Fire sentrale rapporter dokumenterer verdien av en styrket filminsentivordning — og konsekvensene av å stå stille.</p>
+            </div>
+            <div class="innsikt-poster reveal">
+                <img src="images/innsikt-hero.jpg" alt="Ja til No-Brainers" loading="lazy">
+            </div>
         </div>
 
         <div class="report-grid">
@@ -634,19 +656,6 @@
         </div>
         <div class="video-wrapper reveal">
             <iframe src="https://player.vimeo.com/video/1160150795?h=&title=0&byline=0&portrait=0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-</section>
-
-<!-- Hovedvideo / Kampanjefilm -->
-<section style="background: var(--bg);">
-    <div class="container">
-        <div class="reveal" style="text-align: center;">
-            <p class="section-eyebrow">Kampanjefilmen</p>
-            <h2 class="section-title">Se hele kampanjefilmen</h2>
-        </div>
-        <div class="video-wrapper reveal">
-            <iframe src="https://player.vimeo.com/video/1154480558?h=&title=0&byline=0&portrait=0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
         </div>
     </div>
 </section>
