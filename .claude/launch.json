@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "nobrainers",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8765", "-d", "/Users/mathias/Documents/VScode : Claude : Kodemappe/nobrainers-redesign"],
+      "port": 8765
+    }
+  ]
+}
