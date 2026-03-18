@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No-Brainers — Yes to Norwegian Film</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #FAF6F1; --bg-warm: #F0EBE3; --bg-card: #FFFFFF; --bg-dark: #2B2B2B;
+            --text: #2C2C2C; --text-light: #6B6560; --text-muted: #9A9490;
+            --sage: #5B7B6A; --sage-light: #E8EFEB; --brown: #8B6F4E; --brown-light: #F0E6D9;
+            --ocean: #3D5A6E; --ocean-light: #E2ECF0; --terra: #B85C38; --terra-light: #F5E6DF;
+            --sand: #D4C5B2; --cream: #FAF6F1; --border: #E8E2DA;
+            --font-heading: 'DM Serif Display', Georgia, serif;
+            --font-body: 'DM Sans', -apple-system, sans-serif;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-body); background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+
+        .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.25rem 2rem; display: flex; align-items: center; justify-content: space-between; transition: all 0.4s ease; }
+        .navbar.scrolled { background: rgba(250,246,241,0.95); backdrop-filter: blur(16px); box-shadow: 0 1px 0 var(--border); padding: 0.75rem 2rem; }
+        .nav-logo { font-family: var(--font-heading); font-size: 1.4rem; text-decoration: none; color: var(--text); }
+        .nav-logo .dot { color: var(--terra); }
+        .nav-links { display: flex; list-style: none; gap: 2rem; align-items: center; }
+        .nav-links a { color: var(--text-light); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta-btn { background: var(--terra); color: white !important; padding: 0.55rem 1.4rem; border-radius: 6px; font-weight: 600; transition: all 0.3s; }
+        .nav-cta-btn:hover { background: #a04e2e; }
+        .lang-switch { font-size: 0.8rem; color: var(--text-muted); border: 1px solid var(--border); padding: 0.3rem 0.7rem; border-radius: 4px; text-decoration: none; transition: all 0.3s; }
+        .lang-switch:hover { border-color: var(--text-light); color: var(--text); }
+        .nav-toggle { display: none; background: none; border: none; cursor: pointer; }
+        .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--text); margin: 5px 0; }
+
+        .hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .hero-bg { position: absolute; inset: 0; background: url('images/hero-mountain.jpg') center/cover no-repeat; }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(44,44,44,0.25) 0%, rgba(44,44,44,0.15) 40%, rgba(44,44,44,0.55) 80%, rgba(250,246,241,1) 100%); }
+        .hero-content { position: relative; z-index: 2; text-align: center; padding: 2rem; max-width: 800px; }
+        .hero-eyebrow { font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(255,255,255,0.8); margin-bottom: 1.5rem; }
+        .hero h1 { font-family: var(--font-heading); font-size: clamp(3rem, 8vw, 6.5rem); color: white; line-height: 0.95; margin-bottom: 1.5rem; }
+        .hero-sub { font-size: 1.15rem; color: rgba(255,255,255,0.85); max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.7; font-weight: 300; }
+        .hero-btns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.75rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none; }
+        .btn-fill { background: var(--terra); color: white; }
+        .btn-fill:hover { background: #a04e2e; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,92,56,0.3); }
+        .btn-outline { background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(8px); }
+        .btn-outline:hover { background: rgba(255,255,255,0.2); }
+
+        section { padding: 6rem 2rem; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .section-eyebrow { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--terra); margin-bottom: 0.75rem; }
+        .section-title { font-family: var(--font-heading); font-size: clamp(1.8rem, 3.5vw, 2.8rem); line-height: 1.15; margin-bottom: 1rem; }
+        .section-desc { font-size: 1.05rem; color: var(--text-light); max-width: 580px; line-height: 1.7; }
+
+        .stats-section { background: var(--bg-warm); padding: 4rem 2rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border-radius: 12px; overflow: hidden; max-width: 1100px; margin: 0 auto; }
+        .stat-cell { background: var(--bg-card); padding: 2.5rem 1.5rem; text-align: center; }
+        .stat-num { font-family: var(--font-heading); font-size: 2.8rem; line-height: 1; margin-bottom: 0.5rem; }
+        .stat-num.c-sage { color: var(--sage); } .stat-num.c-brown { color: var(--brown); } .stat-num.c-ocean { color: var(--ocean); } .stat-num.c-terra { color: var(--terra); }
+        .stat-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); margin-bottom: 0.25rem; }
+        .stat-detail { font-size: 0.78rem; color: var(--text-muted); }
+
+        .video-section { background: var(--bg-warm); }
+        .video-wrapper { position: relative; max-width: 900px; margin: 2.5rem auto 0; border-radius: 12px; overflow: hidden; aspect-ratio: 16/9; border: 1px solid var(--border); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+        .video-wrapper iframe { width: 100%; height: 100%; border: none; }
+
+        .demands-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; }
+        .demand-card { padding: 2rem; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border); transition: all 0.3s; position: relative; }
+        .demand-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.06); transform: translateY(-2px); }
+        .demand-num { font-family: var(--font-heading); font-size: 2.5rem; color: var(--bg-warm); position: absolute; top: 1rem; right: 1.5rem; }
+        .demand-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; margin-top: 0.5rem; }
+        .demand-card p { font-size: 0.9rem; color: var(--text-light); line-height: 1.6; }
+        .demand-icon { font-size: 1.5rem; }
+
+        .final-cta { background: var(--bg-dark); color: white; text-align: center; padding: 6rem 2rem; position: relative; overflow: hidden; }
+        .final-cta::before { content: ''; position: absolute; inset: 0; background: url('images/stortinget.jpg') center/cover no-repeat; opacity: 0.15; }
+        .final-cta .container { position: relative; z-index: 2; }
+        .final-cta .section-eyebrow { color: var(--sand); }
+        .final-cta .section-title { color: white; }
+        .final-cta .section-desc { color: rgba(255,255,255,0.7); margin: 1rem auto 2.5rem; }
+        .social-row { display: flex; gap: 0.75rem; justify-content: center; margin-top: 1.5rem; }
+        .social-btn { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; text-decoration: none; color: rgba(255,255,255,0.7); font-size: 0.9rem; }
+        .social-btn:hover { background: var(--terra); border-color: var(--terra); color: white; }
+
+        footer { background: var(--bg-dark); color: rgba(255,255,255,0.5); padding: 2rem; border-top: 1px solid rgba(255,255,255,0.08); }
+        .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .footer-logo { font-family: var(--font-heading); font-size: 1.1rem; color: rgba(255,255,255,0.8); }
+        .footer-logo .dot { color: var(--terra); }
+        .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+        .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }
+        .footer-links a:hover { color: white; }
+
+        .back-to-top { position: fixed; bottom: 1.5rem; right: 1.5rem; width: 44px; height: 44px; border-radius: 50%; background: var(--terra); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s; z-index: 99; box-shadow: 0 4px 12px rgba(184,92,56,0.3); }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 1rem 1.25rem; }
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; background: rgba(250,246,241,0.98); padding: 1.5rem; gap: 1rem; backdrop-filter: blur(16px); }
+            .nav-links.active { display: flex; }
+            .nav-toggle { display: block; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .demands-grid { grid-template-columns: 1fr; }
+            section { padding: 4rem 1.25rem; }
+        }
+        @media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+    <a href="en.html" class="nav-logo">no<span class="dot">.</span>brainers</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="#challenge">The Challenge</a></li>
+        <li><a href="#value">The Value</a></li>
+        <li><a href="#demands">Our Demands</a></li>
+        <li><a href="#film">Film</a></li>
+        <li><a href="index.html" class="lang-switch">NO</a></li>
+        <li><a href="#action" class="nav-cta-btn">Take Action</a></li>
+    </ul>
+</nav>
+
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <p class="hero-eyebrow">The Norwegian film industry says</p>
+        <h1>Yes to<br>No-Brainers</h1>
+        <p class="hero-sub">Norway's film incentive scheme must be strengthened — now. Norwegian film has world-class talent, but is losing productions to other countries every day.</p>
+        <div class="hero-btns">
+            <a href="#action" class="btn btn-fill">Sign the petition</a>
+            <a href="#film" class="btn btn-outline">Watch the film</a>
+        </div>
+    </div>
+</section>
+
+<div class="stats-section">
+    <div class="stats-grid">
+        <div class="stat-cell reveal"><div class="stat-num c-sage" data-target="4.7" data-suffix="x" data-decimals="1">0</div><div class="stat-label">Return</div><div class="stat-detail">Per krone invested</div></div>
+        <div class="stat-cell reveal"><div class="stat-num c-brown" data-target="1.9" data-suffix=" bn" data-decimals="1">0</div><div class="stat-label">Tax Revenue</div><div class="stat-detail">Direct return</div></div>
+        <div class="stat-cell reveal"><div class="stat-num c-ocean" data-target="8200" data-suffix="+" data-decimals="0">0</div><div class="stat-label">Jobs</div><div class="stat-detail">In Norwegian film & TV</div></div>
+        <div class="stat-cell reveal"><div class="stat-num c-terra" data-target="25" data-suffix="%" data-decimals="0">0</div><div class="stat-label">Norway's Rate</div><div class="stat-detail">Vs. 30–40% in neighbors</div></div>
+    </div>
+</div>
+
+<section id="challenge">
+    <div class="container">
+        <div class="reveal">
+            <p class="section-eyebrow">The Challenge</p>
+            <h2 class="section-title">Norway is falling behind in the<br>competition for productions</h2>
+            <p class="section-desc">While neighboring countries strengthen their film incentives, Norway stands still. The result: productions that could create value here are moving abroad.</p>
+        </div>
+    </div>
+</section>
+
+<section id="value" style="background: var(--bg-warm);">
+    <div class="container">
+        <div class="reveal" style="text-align: center;">
+            <p class="section-eyebrow">The Value</p>
+            <h2 class="section-title">Film is good business for all of Norway</h2>
+            <p class="section-desc" style="margin: 0.5rem auto 0;">For every krone the state refunds through the incentive scheme, 4.7 kroner return to society. At least 1.9 kroner come back directly through taxes and fees.</p>
+        </div>
+    </div>
+</section>
+
+<section id="demands">
+    <div class="container">
+        <div class="reveal" style="text-align: center;">
+            <p class="section-eyebrow">Our Demands</p>
+            <h2 class="section-title">Four measures that will change everything</h2>
+        </div>
+        <div class="demands-grid">
+            <div class="demand-card reveal"><div class="demand-num">01</div><div class="demand-icon">&#9670;</div><h3>Predictability</h3><p>The scheme must have sufficient and predictable funding so productions can plan long-term. Today's uncertainty drives away investments.</p></div>
+            <div class="demand-card reveal"><div class="demand-num">02</div><div class="demand-icon">&#9670;</div><h3>International Competitiveness</h3><p>The incentive level must increase to at least 30% to match neighboring countries. 25% is not enough when Iceland offers 40% and Finland 30%.</p></div>
+            <div class="demand-card reveal"><div class="demand-num">03</div><div class="demand-icon">&#9670;</div><h3>Access for Norwegian Projects</h3><p>Norwegian productions with international potential must also be able to use the scheme, not just foreign productions.</p></div>
+            <div class="demand-card reveal"><div class="demand-num">04</div><div class="demand-icon">&#9670;</div><h3>Sustainable Production</h3><p>The incentive scheme should promote environmentally friendly film production and help the Norwegian industry lead the green transition.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="video-section" id="film">
+    <div class="container">
+        <div class="reveal" style="text-align: center;">
+            <p class="section-eyebrow">Documentary</p>
+            <h2 class="section-title">When film comes to the village</h2>
+        </div>
+        <div class="video-wrapper reveal">
+            <iframe src="https://player.vimeo.com/video/1160150795?h=&title=0&byline=0&portrait=0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+        </div>
+    </div>
+</section>
+
+<section style="background: var(--bg);">
+    <div class="container">
+        <div class="reveal" style="text-align: center;">
+            <p class="section-eyebrow">Campaign Film</p>
+            <h2 class="section-title">Watch the full campaign film</h2>
+        </div>
+        <div class="video-wrapper reveal">
+            <iframe src="https://player.vimeo.com/video/1154480558?h=&title=0&byline=0&portrait=0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+        </div>
+    </div>
+</section>
+
+<section class="final-cta" id="action">
+    <div class="container">
+        <div class="reveal">
+            <p class="section-eyebrow">Take Action</p>
+            <h2 class="section-title">Norwegian film needs your voice now</h2>
+            <p class="section-desc">Join the campaign. Share the message. Contact your representative. Together we can secure the future of Norwegian film.</p>
+            <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+                <a href="#" class="btn btn-fill">Sign the petition</a>
+                <a href="mailto:kontakt@nobrainers.no" class="btn" style="background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2);">Contact us</a>
+            </div>
+            <div class="social-row">
+                <a href="https://www.facebook.com/profile.php?id=61585225295085" target="_blank" class="social-btn">f</a>
+                <a href="https://www.instagram.com/nobrainers.no" target="_blank" class="social-btn">ig</a>
+                <a href="https://www.snapchat.com/lens/63a2c358b7084ecb8adeb96334648b66?type=SNAPCODE&metadata=01" target="_blank" class="social-btn">sc</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-inner">
+        <div class="footer-logo">no<span class="dot">.</span>brainers</div>
+        <p style="font-size:0.8rem;">A united call from the Norwegian film industry</p>
+        <ul class="footer-links">
+            <li><a href="https://www.facebook.com/profile.php?id=61585225295085" target="_blank">Facebook</a></li>
+            <li><a href="https://www.instagram.com/nobrainers.no" target="_blank">Instagram</a></li>
+            <li><a href="index.html">Norsk</a></li>
+        </ul>
+    </div>
+</footer>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script>
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 60));
+document.getElementById('navToggle').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('active'));
+document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('active')));
+const obs = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+document.querySelectorAll('.stat-num[data-target]').forEach(el => {
+    new IntersectionObserver(([e]) => { if (!e.isIntersecting) return; const t=parseFloat(el.dataset.target),s=el.dataset.suffix||'',d=+el.dataset.decimals||0,st=performance.now(); (function tick(n){const p=Math.min((n-st)/1800,1);el.textContent=(t*(1-Math.pow(1-p,3))).toFixed(d)+s;if(p<1)requestAnimationFrame(tick)})(st); }, { threshold: 0.5 }).observe(el);
+});
+const btt = document.getElementById('backToTop');
+window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 400));
+btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); const t=document.querySelector(a.getAttribute('href')); if(t) t.scrollIntoView({behavior:'smooth'}); }));
+</script>
+</body>
+</html>

@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No-Brainers — Ja til norsk film</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #FAF6F1;
+            --bg-warm: #F0EBE3;
+            --bg-card: #FFFFFF;
+            --bg-dark: #2B2B2B;
+            --text: #2C2C2C;
+            --text-light: #6B6560;
+            --text-muted: #9A9490;
+            --sage: #5B7B6A;
+            --sage-light: #E8EFEB;
+            --brown: #8B6F4E;
+            --brown-light: #F0E6D9;
+            --ocean: #3D5A6E;
+            --ocean-light: #E2ECF0;
+            --terra: #B85C38;
+            --terra-light: #F5E6DF;
+            --sand: #D4C5B2;
+            --cream: #FAF6F1;
+            --border: #E8E2DA;
+            --font-heading: 'DM Serif Display', Georgia, serif;
+            --font-body: 'DM Sans', -apple-system, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-body); background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 1.25rem 2rem;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: all 0.4s ease;
+        }
+        .navbar.scrolled {
+            background: rgba(250, 246, 241, 0.95);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 1px 0 var(--border);
+            padding: 0.75rem 2rem;
+        }
+        .nav-logo {
+            font-family: var(--font-heading); font-size: 1.4rem;
+            text-decoration: none; color: var(--text); letter-spacing: -0.01em;
+        }
+        .nav-logo .dot { color: var(--terra); }
+        .nav-links { display: flex; list-style: none; gap: 2rem; align-items: center; }
+        .nav-links a {
+            color: var(--text-light); text-decoration: none; font-size: 0.88rem;
+            font-weight: 500; transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta-btn {
+            background: var(--terra); color: white !important; padding: 0.55rem 1.4rem;
+            border-radius: 6px; font-weight: 600; transition: all 0.3s;
+        }
+        .nav-cta-btn:hover { background: #a04e2e; transform: translateY(-1px); }
+        .lang-switch {
+            font-size: 0.8rem; color: var(--text-muted); border: 1px solid var(--border);
+            padding: 0.3rem 0.7rem; border-radius: 4px; text-decoration: none; transition: all 0.3s;
+        }
+        .lang-switch:hover { border-color: var(--text-light); color: var(--text); }
+        .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+        .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--text); margin: 5px 0; transition: 0.3s; }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute; inset: 0;
+            background: url('images/hero-mountain.jpg') center/cover no-repeat;
+        }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(44,44,44,0.25) 0%, rgba(44,44,44,0.15) 40%, rgba(44,44,44,0.55) 80%, rgba(250,246,241,1) 100%);
+        }
+        .hero-content {
+            position: relative; z-index: 2; text-align: center; padding: 2rem;
+            max-width: 800px;
+        }
+        .hero-eyebrow {
+            font-size: 0.8rem; font-weight: 500; text-transform: uppercase;
+            letter-spacing: 0.2em; color: rgba(255,255,255,0.8); margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: var(--font-heading); font-size: clamp(3rem, 8vw, 6.5rem);
+            color: white; line-height: 0.95; margin-bottom: 1.5rem; letter-spacing: -0.02em;
+        }
+        .hero-sub {
+            font-size: 1.15rem; color: rgba(255,255,255,0.85);
+            max-width: 500px; margin: 0 auto 2.5rem; line-height: 1.7; font-weight: 300;
+        }
+        .hero-btns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.85rem 1.75rem; border-radius: 6px; font-weight: 600;
+            font-size: 0.9rem; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none;
+        }
+        .btn-fill { background: var(--terra); color: white; }
+        .btn-fill:hover { background: #a04e2e; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,92,56,0.3); }
+        .btn-outline { background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(8px); }
+        .btn-outline:hover { background: rgba(255,255,255,0.2); }
+        .btn-dark-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-dark-outline:hover { border-color: var(--text); }
+        .hero-scroll {
+            position: absolute; bottom: 6rem; left: 50%; transform: translateX(-50%); z-index: 2;
+            color: rgba(255,255,255,0.5); font-size: 0.7rem; text-transform: uppercase;
+            letter-spacing: 0.2em; text-align: center;
+        }
+        .hero-scroll .line { width: 1px; height: 40px; background: rgba(255,255,255,0.3); margin: 0.5rem auto 0; }
+
+        /* ===== SECTIONS ===== */
+        section { padding: 6rem 2rem; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .section-eyebrow {
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.15em; color: var(--terra); margin-bottom: 0.75rem;
+        }
+        .section-title {
+            font-family: var(--font-heading); font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            line-height: 1.15; margin-bottom: 1rem; color: var(--text);
+        }
+        .section-desc {
+            font-size: 1.05rem; color: var(--text-light); max-width: 580px; line-height: 1.7;
+        }
+
+        /* ===== STATS ===== */
+        .stats-section { background: var(--bg-warm); padding: 4rem 2rem; }
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+            background: var(--border); border-radius: 12px; overflow: hidden;
+            max-width: 1100px; margin: 0 auto;
+        }
+        .stat-cell {
+            background: var(--bg-card); padding: 2.5rem 1.5rem; text-align: center;
+        }
+        .stat-num {
+            font-family: var(--font-heading); font-size: 2.8rem; line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        .stat-num.c-sage { color: var(--sage); }
+        .stat-num.c-brown { color: var(--brown); }
+        .stat-num.c-ocean { color: var(--ocean); }
+        .stat-num.c-terra { color: var(--terra); }
+        .stat-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); margin-bottom: 0.25rem; }
+        .stat-detail { font-size: 0.78rem; color: var(--text-muted); }
+
+        /* ===== PROBLEM ===== */
+        .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-top: 3rem; }
+        .bar-chart-minimal { display: flex; flex-direction: column; gap: 1.25rem; }
+        .bar-row { display: flex; align-items: center; gap: 1rem; }
+        .bar-country { width: 70px; font-size: 0.85rem; font-weight: 500; text-align: right; flex-shrink: 0; }
+        .bar-track { flex: 1; height: 32px; background: var(--bg-warm); border-radius: 4px; overflow: hidden; position: relative; }
+        .bar-fill { height: 100%; border-radius: 4px; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; }
+        .bar-val { font-size: 0.8rem; font-weight: 700; color: white; }
+        .bar-fill.sage { background: var(--sage); }
+        .bar-fill.ocean { background: var(--ocean); }
+        .bar-fill.brown { background: var(--brown); }
+        .bar-fill.terra { background: var(--terra); }
+        .problem-cards { display: flex; flex-direction: column; gap: 1rem; }
+        .p-card {
+            padding: 1.25rem 1.5rem; border-radius: 10px; border: 1px solid var(--border);
+            background: var(--bg-card); transition: all 0.3s;
+        }
+        .p-card:hover { border-color: var(--sand); transform: translateX(4px); }
+        .p-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .p-card p { font-size: 0.88rem; color: var(--text-light); line-height: 1.55; }
+
+        /* ===== ROI ===== */
+        .roi-section { background: var(--bg-warm); }
+        .roi-hero {
+            display: flex; align-items: center; gap: 3rem; margin: 3rem 0;
+            flex-wrap: wrap; justify-content: center;
+        }
+        .roi-big {
+            font-family: var(--font-heading); font-size: clamp(5rem, 10vw, 8rem);
+            color: var(--sage); line-height: 1;
+        }
+        .roi-text { max-width: 380px; }
+        .roi-text h3 { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.75rem; }
+        .roi-text p { color: var(--text-light); line-height: 1.65; }
+        .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem; }
+        .chart-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+            padding: 2rem; transition: all 0.3s;
+        }
+        .chart-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.06); }
+        .chart-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .chart-card .chart-desc { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+        .pie-wrap { display: flex; align-items: center; gap: 1.5rem; }
+        .pie-svg { width: 160px; height: 160px; flex-shrink: 0; }
+        .pie-legend { display: flex; flex-direction: column; gap: 0.45rem; }
+        .legend-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--text-light); }
+        .legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+        .progress-list { display: flex; flex-direction: column; gap: 1.25rem; }
+        .prog-item label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.4rem; }
+        .prog-item label span { color: var(--text-muted); font-weight: 400; }
+        .prog-track { height: 6px; background: var(--bg-warm); border-radius: 6px; overflow: hidden; }
+        .prog-fill { height: 100%; border-radius: 6px; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); width: 0; }
+
+        /* ===== INNSIKT (REPORTS) ===== */
+        .innsikt-section { background: var(--bg); }
+        .innsikt-hero {
+            position: relative; border-radius: 16px; overflow: hidden; margin-bottom: 3rem;
+            aspect-ratio: 21/9; background: url('images/innsikt-hero.jpg') center/cover no-repeat;
+        }
+        .innsikt-hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(44,44,44,0.6), rgba(44,44,44,0.3));
+            display: flex; align-items: center; justify-content: center;
+        }
+        .innsikt-hero h2 {
+            font-family: var(--font-heading); font-size: clamp(2rem, 4vw, 3.5rem);
+            color: white; text-align: center;
+        }
+        .report-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 2rem; }
+        .report-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+            padding: 2rem; transition: all 0.3s; display: flex; flex-direction: column;
+        }
+        .report-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.06); transform: translateY(-2px); }
+        .report-tag {
+            display: inline-block; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.1em; padding: 0.25rem 0.6rem; border-radius: 4px; margin-bottom: 1rem; width: fit-content;
+        }
+        .tag-sage { background: var(--sage-light); color: var(--sage); }
+        .tag-ocean { background: var(--ocean-light); color: var(--ocean); }
+        .tag-brown { background: var(--brown-light); color: var(--brown); }
+        .tag-terra { background: var(--terra-light); color: var(--terra); }
+        .report-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .report-card p { font-size: 0.88rem; color: var(--text-light); line-height: 1.6; flex: 1; }
+        .report-link {
+            display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 1rem;
+            font-size: 0.82rem; font-weight: 600; color: var(--terra); text-decoration: none;
+            transition: gap 0.3s;
+        }
+        .report-link:hover { gap: 0.6rem; }
+
+        /* ===== KEY FINDINGS ===== */
+        .findings-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+        .finding-card {
+            text-align: center; padding: 2rem 1.5rem; border-radius: 12px; background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+        .finding-num { font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 0.5rem; }
+
+        /* ===== VIDEO SECTION ===== */
+        .video-section { background: var(--bg-warm); }
+        .video-wrapper {
+            position: relative; max-width: 900px; margin: 2.5rem auto 0;
+            border-radius: 12px; overflow: hidden; aspect-ratio: 16/9;
+            border: 1px solid var(--border); box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+        }
+        .video-wrapper iframe { width: 100%; height: 100%; border: none; }
+
+        /* ===== KRAV (DEMANDS) ===== */
+        .demands-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; }
+        .demand-card {
+            padding: 2rem; border-radius: 12px; background: var(--bg-card);
+            border: 1px solid var(--border); transition: all 0.3s; position: relative;
+        }
+        .demand-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.06); transform: translateY(-2px); }
+        .demand-num {
+            font-family: var(--font-heading); font-size: 2.5rem; color: var(--bg-warm);
+            position: absolute; top: 1rem; right: 1.5rem;
+        }
+        .demand-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; margin-top: 0.5rem; }
+        .demand-card p { font-size: 0.9rem; color: var(--text-light); line-height: 1.6; }
+        .demand-icon { font-size: 1.5rem; }
+
+        /* ===== COMPARISON TABLE ===== */
+        .comparison-section { background: var(--bg-warm); }
+        .table-wrap {
+            margin-top: 2.5rem; border-radius: 12px; overflow: hidden;
+            border: 1px solid var(--border); background: var(--bg-card);
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            padding: 1rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted);
+            background: var(--bg-warm); border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); font-size: 0.9rem;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(0,0,0,0.01); }
+        .flag { font-size: 1.2rem; margin-right: 0.5rem; }
+        .badge {
+            display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px;
+            font-weight: 600; font-size: 0.82rem;
+        }
+        .badge-green { background: var(--sage-light); color: var(--sage); }
+        .badge-yellow { background: var(--brown-light); color: var(--brown); }
+        .badge-red { background: var(--terra-light); color: var(--terra); }
+        tr.highlight-row td { background: var(--terra-light); }
+
+        /* ===== CAMPAIGN IMAGE ===== */
+        .campaign-img-section { padding: 0 2rem; }
+        .campaign-img-wrap {
+            max-width: 1100px; margin: 0 auto; border-radius: 16px; overflow: hidden;
+            aspect-ratio: 16/10;
+        }
+        .campaign-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* ===== BIDRAGSYTERE ===== */
+        .contributors-section { background: var(--bg); }
+        .contrib-groups { margin-top: 2.5rem; }
+        .contrib-group { margin-bottom: 2.5rem; }
+        .contrib-group-title {
+            font-family: var(--font-heading); font-size: 1.2rem; margin-bottom: 1rem;
+            padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+        }
+        .contrib-list {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 0.35rem;
+        }
+        .contrib-item {
+            font-size: 0.88rem; color: var(--text-light); padding: 0.35rem 0;
+        }
+        .contrib-item strong { color: var(--text); font-weight: 600; }
+
+        /* ===== SUPPORTERS MARQUEE ===== */
+        .marquee-section { padding: 3rem 0; overflow: hidden; background: var(--bg-warm); }
+        .marquee-track {
+            display: flex; gap: 1.5rem; animation: marquee 35s linear infinite; width: max-content;
+        }
+        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .marquee-chip {
+            padding: 0.6rem 1.25rem; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 50px; white-space: nowrap; font-size: 0.82rem; font-weight: 500;
+            color: var(--text-light); flex-shrink: 0;
+        }
+
+        /* ===== FINAL CTA ===== */
+        .final-cta {
+            background: var(--bg-dark); color: white; text-align: center; padding: 6rem 2rem;
+            position: relative; overflow: hidden;
+        }
+        .final-cta::before {
+            content: ''; position: absolute; inset: 0;
+            background: url('images/stortinget.jpg') center/cover no-repeat; opacity: 0.15;
+        }
+        .final-cta .container { position: relative; z-index: 2; }
+        .final-cta .section-eyebrow { color: var(--sand); }
+        .final-cta .section-title { color: white; font-size: clamp(2rem, 4vw, 3rem); }
+        .final-cta .section-desc { color: rgba(255,255,255,0.7); margin: 1rem auto 2.5rem; }
+        .final-cta .btn-fill { background: var(--terra); }
+        .final-cta .btn-fill:hover { background: #a04e2e; }
+        .social-row {
+            display: flex; gap: 0.75rem; justify-content: center; margin-top: 1.5rem;
+        }
+        .social-btn {
+            width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center;
+            justify-content: center; cursor: pointer; transition: all 0.3s;
+            text-decoration: none; color: rgba(255,255,255,0.7); font-size: 0.9rem;
+        }
+        .social-btn:hover { background: var(--terra); border-color: var(--terra); color: white; }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--bg-dark); color: rgba(255,255,255,0.5); padding: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .footer-inner {
+            max-width: 1100px; margin: 0 auto; display: flex;
+            justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+        }
+        .footer-logo { font-family: var(--font-heading); font-size: 1.1rem; color: rgba(255,255,255,0.8); }
+        .footer-logo .dot { color: var(--terra); }
+        .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+        .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.82rem; transition: color 0.3s; }
+        .footer-links a:hover { color: white; }
+
+        /* ===== BACK TO TOP ===== */
+        .back-to-top {
+            position: fixed; bottom: 1.5rem; right: 1.5rem; width: 44px; height: 44px;
+            border-radius: 50%; background: var(--terra); color: white; border: none;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: all 0.3s; z-index: 99;
+            box-shadow: 0 4px 12px rgba(184,92,56,0.3);
+        }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: scale(1.08); }
+
+        /* ===== REVEAL ===== */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .problem-grid, .charts-row, .demands-grid, .report-grid { grid-template-columns: 1fr; }
+            .findings-row { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .navbar { padding: 1rem 1.25rem; }
+            .nav-links {
+                display: none; position: absolute; top: 100%; left: 0; right: 0;
+                flex-direction: column; background: rgba(250,246,241,0.98); padding: 1.5rem;
+                gap: 1rem; backdrop-filter: blur(16px); border-bottom: 1px solid var(--border);
+            }
+            .nav-links.active { display: flex; }
+            .nav-toggle { display: block; }
+            section { padding: 4rem 1.25rem; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .pie-wrap { flex-direction: column; }
+            .roi-hero { text-align: center; }
+            .table-wrap { overflow-x: auto; }
+            table { min-width: 600px; }
+            .findings-row { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .findings-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+    <a href="#" class="nav-logo">no<span class="dot">.</span>brainers</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Meny">
+        <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="#problemet">Problemet</a></li>
+        <li><a href="#verdien">Verdien</a></li>
+        <li><a href="#innsikt">Innsikt</a></li>
+        <li><a href="#kravene">Kravene</a></li>
+        <li><a href="#bidragsytere">Bidragsytere</a></li>
+        <li><a href="en.html" class="lang-switch">EN</a></li>
+        <li><a href="#handling" class="nav-cta-btn">Signer oppropet</a></li>
+    </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <p class="hero-eyebrow">Norsk filmbransje sier</p>
+        <h1>Ja til<br>No-Brainers</h1>
+        <p class="hero-sub">Filminsentivordningen må styrkes — nå. Norsk film har verdensklasse talent, men taper produksjoner til utlandet hver dag.</p>
+        <div class="hero-btns">
+            <a href="#handling" class="btn btn-fill">Signer oppropet</a>
+            <a href="#video" class="btn btn-outline">Se filmen</a>
+        </div>
+    </div>
+    <div class="hero-scroll"><span>Scroll</span><div class="line"></div></div>
+</section>
+
+<!-- Stats -->
+<div class="stats-section">
+    <div class="stats-grid">
+        <div class="stat-cell reveal">
+            <div class="stat-num c-sage" data-target="4.7" data-suffix="x" data-decimals="1">0</div>
+            <div class="stat-label">Avkastning</div>
+            <div class="stat-detail">Per investerte krone</div>
+        </div>
+        <div class="stat-cell reveal">
+            <div class="stat-num c-brown" data-target="1.9" data-suffix=" mrd" data-decimals="1">0</div>
+            <div class="stat-label">Skatteinntekter</div>
+            <div class="stat-detail">Direkte tilbake</div>
+        </div>
+        <div class="stat-cell reveal">
+            <div class="stat-num c-ocean" data-target="8200" data-suffix="+" data-decimals="0">0</div>
+            <div class="stat-label">Arbeidsplasser</div>
+            <div class="stat-detail">I norsk film & TV</div>
+        </div>
+        <div class="stat-cell reveal">
+            <div class="stat-num c-terra" data-target="25" data-suffix="%" data-decimals="0">0</div>
+            <div class="stat-label">Norges sats</div>
+            <div class="stat-detail">Vs. 30–40% i naboland</div>
+        </div>
+    </div>
+</div>
+
+<!-- Problem -->
+<section id="problemet">
+    <div class="container">
+        <div class="reveal">
+            <p class="section-eyebrow">Utfordringen</p>
+            <h2 class="section-title">Norge taper terreng i kampen<br>om produksjonene</h2>
+            <p class="section-desc">Mens nabolandene styrker sine filminsentiver, står Norge stille. Resultatet er at produksjoner som kunne skapt verdier her, flytter utenlands.</p>
+        </div>
+        <div class="problem-grid">
+            <div class="reveal">
+                <div class="bar-chart-minimal" id="barChart">
+                    <div class="bar-row"><span class="bar-country">Island</span><div class="bar-track"><div class="bar-fill sage" data-width="100%"><span class="bar-val">40%</span></div></div></div>
+                    <div class="bar-row"><span class="bar-country">Irland</span><div class="bar-track"><div class="bar-fill ocean" data-width="87%"><span class="bar-val">35%</span></div></div></div>
+                    <div class="bar-row"><span class="bar-country">Finland</span><div class="bar-track"><div class="bar-fill brown" data-width="75%"><span class="bar-val">30%</span></div></div></div>
+                    <div class="bar-row"><span class="bar-country">Sverige</span><div class="bar-track"><div class="bar-fill brown" data-width="75%"><span class="bar-val">30%</span></div></div></div>
+                    <div class="bar-row"><span class="bar-country"><strong>Norge</strong></span><div class="bar-track"><div class="bar-fill terra" data-width="62%"><span class="bar-val">25%</span></div></div></div>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem;">Kilde: Olsberg SPI Global Incentives Index, nov. 2025</p>
+            </div>
+            <div class="problem-cards reveal">
+                <div class="p-card">
+                    <h4>Lavest i Norden</h4>
+                    <p>Norges insentivordning på 25% er den laveste blant nordiske land, og langt under europeisk gjennomsnitt.</p>
+                </div>
+                <div class="p-card">
+                    <h4>Manglende forutsigbarhet</h4>
+                    <p>Ordningen har ingen garanti for tilstrekkelig finansiering, noe som gjør det umulig å planlegge store produksjoner.</p>
+                </div>
+                <div class="p-card">
+                    <h4>Produksjoner flykter</h4>
+                    <p>Internasjonale produksjoner velger nabolandene fremfor Norge — med dem forsvinner arbeidsplasser og kompetanse.</p>
+                </div>
+                <div class="p-card">
+                    <h4>Tapt verdiskaping</h4>
+                    <p>Milliarder i potensielle inntekter, turisme og kultureksport går tapt hvert eneste år.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ROI / Verdien -->
+<section class="roi-section" id="verdien">
+    <div class="container">
+        <div class="reveal" style="text-align: center;">
+            <p class="section-eyebrow">Verdien</p>
+            <h2 class="section-title">Film er god business for hele Norge</h2>
+        </div>
+        <div class="roi-hero reveal">
+            <div class="roi-big">4,7x</div>
+            <div class="roi-text">
+                <h3>Avkastning per krone</h3>
+                <p>For hver krone staten refunderer gjennom insentivordningen, kommer 4,7 kroner tilbake til samfunnet. Minst 1,9 kroner returnerer direkte gjennom skatter og avgifter.</p>
+            </div>
+        </div>
+        <div class="charts-row">
+            <div class="chart-card reveal">
+                <h3>Hvor pengene kommer tilbake</h3>
+                <p class="chart-desc">Fordeling av samfunnsøkonomisk gevinst</p>
+                <div class="pie-wrap">
+                    <svg class="pie-svg" viewBox="0 0 42 42">
+                        <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="var(--terra)" stroke-width="6" stroke-dasharray="36 64" stroke-dashoffset="25"/>
+                        <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="var(--brown)" stroke-width="6" stroke-dasharray="25 75" stroke-dashoffset="89"/>
+                        <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="var(--sage)" stroke-width="6" stroke-dasharray="19 81" stroke-dashoffset="64"/>
+                        <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="var(--ocean)" stroke-width="6" stroke-dasharray="11 89" stroke-dashoffset="45"/>
+                        <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="var(--sand)" stroke-width="6" stroke-dasharray="9 91" stroke-dashoffset="34"/>
+                        <text x="21" y="22" text-anchor="middle" font-size="5" font-weight="700" fill="var(--text)" font-family="DM Serif Display">4,7x</text>
+                    </svg>
+                    <div class="pie-legend">
+                        <div class="legend-row"><div class="legend-dot" style="background:var(--terra)"></div>Direkte skatter — 36%</div>
+                        <div class="legend-row"><div class="legend-dot" style="background:var(--brown)"></div>Lokalt forbruk — 25%</div>
+                        <div class="legend-row"><div class="legend-dot" style="background:var(--sage)"></div>Turisme-effekt — 19%</div>
+                        <div class="legend-row"><div class="legend-dot" style="background:var(--ocean)"></div>Kompetansebygging — 11%</div>
+                        <div class="legend-row"><div class="legend-dot" style="background:var(--sand)"></div>Kultureksport — 9%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-card reveal">
+                <h3>Effekt av filmproduksjon</h3>
+                <p class="chart-desc">Samfunnsøkonomisk påvirkning</p>
+                <div class="progress-list">
+                    <div class="prog-item"><label>Lokal sysselsetting <span>85%</span></label><div class="prog-track"><div class="prog-fill" data-width="85%" style="background:var(--sage)"></div></div></div>
+                    <div class="prog-item"><label>Hotell & servering <span>72%</span></label><div class="prog-track"><div class="prog-fill" data-width="72%" style="background:var(--brown)"></div></div></div>
+                    <div class="prog-item"><label>Transport & logistikk <span>64%</span></label><div class="prog-track"><div class="prog-fill" data-width="64%" style="background:var(--ocean)"></div></div></div>
+                    <div class="prog-item"><label>Turisme (langsiktig) <span>58%</span></label><div class="prog-track"><div class="prog-fill" data-width="58%" style="background:var(--terra)"></div></div></div>
+                    <div class="prog-item"><label>Teknisk utstyrsleverandører <span>45%</span></label><div class="prog-track"><div class="prog-fill" data-width="45%" style="background:var(--sand)"></div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Innsikt og rapporter -->
+<section class="innsikt-section" id="innsikt">
+    <div class="container">
+        <div class="innsikt-hero reveal">
+            <div class="innsikt-hero-overlay">
+                <h2>Innsikt og Kampanje</h2>
+            </div>
+        </div>
+
+        <div class="reveal">
+            <p class="section-eyebrow">Forskning & data</p>
+            <h2 class="section-title">Hva rapportene viser</h2>
+            <p class="section-desc">Fire sentrale rapporter dokumenterer verdien av en styrket filminsentivordning — og konsekvensene av å stå stille.</p>
+        </div>
+
+        <div class="report-grid">
+            <div class="report-card reveal">
+                <span class="report-tag tag-sage">Olsberg SPI</span>
+                <h3>Global Incentives Index 2025</h3>
+                <p>Olsberg SPI sin halvårlige oversikt over filminsentiver globalt viser at Norge med 25% ligger betydelig under det europeiske gjennomsnittet. Island (40%), Irland (35%) og Finland (30%) konkurrerer kraftig om de samme produksjonene.</p>
+                <a href="https://www.o-spi.com/projects/blog-global-incentives-index" target="_blank" class="report-link">Les mer &rarr;</a>
+            </div>
+            <div class="report-card reveal">
+                <span class="report-tag tag-ocean">Regjeringen</span>
+                <h3>Norway Incentive Impact Study 2023</h3>
+                <p>Regjeringens egen konsekvensanalyse dokumenterer at for hver krone investert i insentivordningen, genereres 4,7 kroner i samfunnsøkonomisk verdi. Minst 1,9 kroner kommer direkte tilbake gjennom skatter og avgifter.</p>
+                <a href="https://www.regjeringen.no/contentassets/55056a5b5b4a4a40a070dcf0c41700fb/norway-incentive-impact-study-final-report-2023-02-24.pdf" target="_blank" class="report-link">Last ned rapport &rarr;</a>
+            </div>
+            <div class="report-card reveal">
+                <span class="report-tag tag-brown">Olsberg SPI</span>
+                <h3>Spesialrapport: Norge i kontekst</h3>
+                <p>Olsberg SPI sin dybdeanalyse fra november 2025 sammenligner Norges insentivordning direkte med konkurrentlandene og viser at Norge risikerer å falle enda lenger bak uten umiddelbar handling.</p>
+                <a href="https://nobrainers.no/wp-content/uploads/2026/02/Global-Incentives-Index_Olsberg_Nov-2025.pdf" target="_blank" class="report-link">Last ned rapport &rarr;</a>
+            </div>
+            <div class="report-card reveal">
+                <span class="report-tag tag-terra">NFI</span>
+                <h3>Insentivordningen — Tildelinger</h3>
+                <p>Norsk Filminstitutts oversikt viser hvilke produksjoner som har mottatt støtte — fra Troll 2 til Star Trek-serien via Storm Studios. Ordningen tiltrekker store internasjonale produksjoner, men budsjettet begrenser potensialet.</p>
+                <a href="https://www.nfi.no/tilskudd/insentiv/insentivordningen-2023" target="_blank" class="report-link">Se tildelinger &rarr;</a>
+            </div>
+        </div>
+
+        <div class="findings-row">
+            <div class="finding-card reveal">
+                <div class="finding-num c-sage">4,7x</div>
+                <div class="stat-label">Samfunnsøkonomisk avkastning</div>
+                <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.5rem;">Per investerte krone i filminsentiver</p>
+            </div>
+            <div class="finding-card reveal">
+                <div class="finding-num c-terra">32,9M</div>
+                <div class="stat-label">Største enkelt-tildeling</div>
+                <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.5rem;">Til Mile Zero (André Øvredal) i 2025</p>
+            </div>
+            <div class="finding-card reveal">
+                <div class="finding-num c-ocean">80+</div>
+                <div class="stat-label">Land med filminsentiver</div>
+                <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.5rem;">Norge er ett av få som ikke øker satsen</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Video: Når filmen kommer til bygda -->
+<section class="video-section" id="video">
+    <div class="container">
+        <div class="reveal" style="text-align: center;">
+            <p class="section-eyebrow">Dokumentar</p>
+            <h2 class="section-title">Når filmen kommer til bygda</h2>
+            <p class="section-desc" style="margin: 0.5rem auto 0;">Historiene fra lokalsamfunn over hele Norge som berøres av filmproduksjon.</p>
+        </div>
+        <div class="video-wrapper reveal">
+            <iframe src="https://player.vimeo.com/video/1160150795?h=&title=0&byline=0&portrait=0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+        </div>
+    </div>
+</section>
+
+<!-- Hovedvideo / Kampanjefilm -->
+<section style="background: var(--bg);">
+    <div class="container">
+        <div class="reveal" style="text-align: center;">
+            <p class="section-eyebrow">Kampanjefilmen</p>
+            <h2 class="section-title">Se hele kampanjefilmen</h2>
+        </div>
+        <div class="video-wrapper reveal">
+            <iframe src="https://player.vimeo.com/video/1154480558?h=&title=0&byline=0&portrait=0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+        </div>
+    </div>
+</section>
+
+<!-- Krav -->
+<section id="kravene">
+    <div class="container">
+        <div class="reveal" style="text-align: center;">
+            <p class="section-eyebrow">Våre krav</p>
+            <h2 class="section-title">Fire grep som vil forandre alt</h2>
+            <p class="section-desc" style="margin: 0.5rem auto 0;">Konkrete tiltak som vil gjøre Norge konkurransedyktig og sikre en bærekraftig filmbransje.</p>
+        </div>
+        <div class="demands-grid">
+            <div class="demand-card reveal">
+                <div class="demand-num">01</div>
+                <div class="demand-icon">&#9670;</div>
+                <h3>Forutsigbarhet</h3>
+                <p>Ordningen må ha tilstrekkelig og forutsigbar finansiering slik at produksjoner kan planlegge langsiktig. Dagens usikkerhet skremmer bort investeringer.</p>
+            </div>
+            <div class="demand-card reveal">
+                <div class="demand-num">02</div>
+                <div class="demand-icon">&#9670;</div>
+                <h3>Internasjonal konkurransekraft</h3>
+                <p>Insentivnivået må økes til minimum 30% for å matche nabolandene. 25% er ikke nok når Island tilbyr 40% og Finland 30%.</p>
+            </div>
+            <div class="demand-card reveal">
+                <div class="demand-num">03</div>
+                <div class="demand-icon">&#9670;</div>
+                <h3>Tilgang for norske prosjekter</h3>
+                <p>Norske produksjoner med internasjonalt potensial må også kunne benytte seg av ordningen, ikke bare utenlandske produksjoner.</p>
+            </div>
+            <div class="demand-card reveal">
+                <div class="demand-num">04</div>
+                <div class="demand-icon">&#9670;</div>
+                <h3>Bærekraftig produksjon</h3>
+                <p>Insentivordningen bør fremme miljøvennlig filmproduksjon og bidra til at den norske bransjen leder an i grønn omstilling.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sammenligning -->
+<section class="comparison-section" id="sammenligning">
+    <div class="container">
+        <div class="reveal" style="text-align: center;">
+            <p class="section-eyebrow">Sammenligning</p>
+            <h2 class="section-title">Norge mot konkurrentene</h2>
+        </div>
+        <div class="table-wrap reveal">
+            <table>
+                <thead>
+                    <tr><th>Land</th><th>Insentivrate</th><th>Forutsigbarhet</th><th>Årlig budsjett</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><span class="flag">&#127470;&#127480;</span>Island</td><td><span class="badge badge-green">40%</span></td><td>Lovfestet</td><td>Ubegrenset</td></tr>
+                    <tr><td><span class="flag">&#127470;&#127466;</span>Irland</td><td><span class="badge badge-green">35%</span></td><td>Lovfestet</td><td>Ubegrenset</td></tr>
+                    <tr><td><span class="flag">&#127467;&#127470;</span>Finland</td><td><span class="badge badge-yellow">30%</span></td><td>Forutsigbar</td><td>~€30M</td></tr>
+                    <tr><td><span class="flag">&#127480;&#127466;</span>Sverige</td><td><span class="badge badge-yellow">30%</span></td><td>Rimelig</td><td>~€20M</td></tr>
+                    <tr class="highlight-row"><td><span class="flag">&#127475;&#127476;</span><strong>Norge</strong></td><td><span class="badge badge-red">25%</span></td><td>Usikker</td><td>~NOK 100M</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- Campaign Image -->
+<div class="campaign-img-section reveal" style="padding-top: 4rem; padding-bottom: 0;">
+    <div class="campaign-img-wrap">
+        <img src="images/stortinget.jpg" alt="Ja til No-Brainers foran Stortinget" loading="lazy">
+    </div>
+</div>
+
+<!-- Bidragsytere -->
+<section class="contributors-section" id="bidragsytere">
+    <div class="container">
+        <div class="reveal">
+            <p class="section-eyebrow">Bidragsytere</p>
+            <h2 class="section-title">Menneskene bak kampanjen</h2>
+            <p class="section-desc">En samlet bransje med skuespillere, regissører, fotografer, teknikere, ordførere og lokalsamfunn over hele Norge.</p>
+        </div>
+        <div class="contrib-groups reveal">
+            <div class="contrib-group">
+                <h3 class="contrib-group-title">Rauma</h3>
+                <div class="contrib-list">
+                    <div class="contrib-item"><strong>Ingrid Bolsø Berdal</strong> — Skuespiller</div>
+                    <div class="contrib-item"><strong>Jens Edgar Haugen</strong> — Regi</div>
+                    <div class="contrib-item"><strong>Oskar Dalsbakken</strong> — DOP</div>
+                    <div class="contrib-item"><strong>Thor Erik Løkken</strong> — Lysmester</div>
+                    <div class="contrib-item"><strong>Håvard Holtop</strong> — Lysassistent</div>
+                    <div class="contrib-item"><strong>Jakob Mjøs</strong> — Lysassistent</div>
+                    <div class="contrib-item"><strong>Kenneth Gustavsen</strong> — Lyd</div>
+                    <div class="contrib-item"><strong>Eirik Holst Ågaard</strong> — Focuspuller</div>
+                    <div class="contrib-item"><strong>Phillip Borgli</strong> — Kameraassistent</div>
+                    <div class="contrib-item"><strong>Petter Alnes-Bonesmo</strong> — Produksjonsass.</div>
+                    <div class="contrib-item"><strong>Arve Horgheim</strong> — Location scout</div>
+                    <div class="contrib-item"><strong>Yvonne Wold</strong> — Ordfører Rauma</div>
+                    <div class="contrib-item"><strong>Stian Reinhardsen</strong> — Snekker</div>
+                    <div class="contrib-item"><strong>Renate Remmen Næss</strong> — Hønemor</div>
+                    <div class="contrib-item"><strong>Steinar Løite</strong> — Resepsjonist Grand Hotel</div>
+                    <div class="contrib-item"><strong>Servitør</strong> — Mama Rosa</div>
+                    <div class="contrib-item"><strong>Kamerautleien</strong></div>
+                    <div class="contrib-item"><strong>Dagslys</strong></div>
+                    <div class="contrib-item"><strong>Shortcut Norge</strong> — Grade</div>
+                    <div class="contrib-item"><strong>Magnus Vanem</strong> — Klipp</div>
+                </div>
+            </div>
+            <div class="contrib-group">
+                <h3 class="contrib-group-title">Animasjonsfilm</h3>
+                <div class="contrib-list">
+                    <div class="contrib-item"><strong>Qvisten Animasjon</strong></div>
+                    <div class="contrib-item"><strong>Arnt Christian Scheele</strong> — Qvisten</div>
+                    <div class="contrib-item"><strong>Roy Ranheim Kristoffersen</strong> — Qvisten</div>
+                    <div class="contrib-item"><strong>Dennis Storhøi</strong> — Voiceartist</div>
+                </div>
+            </div>
+            <div class="contrib-group">
+                <h3 class="contrib-group-title">Frøya</h3>
+                <div class="contrib-list">
+                    <div class="contrib-item"><strong>Kristin Furunes Strømskag</strong> — Ordfører Frøya</div>
+                    <div class="contrib-item"><strong>Mona Elisabeth Olsen Skarsvåg</strong> — Frøya kommune</div>
+                    <div class="contrib-item"><strong>Lill Kristin Krutvik</strong> — Coop Frøya</div>
+                    <div class="contrib-item"><strong>Stig Bremnes</strong> — Hotell Frøya</div>
+                    <div class="contrib-item"><strong>Runar Sivertsen</strong> — Salmar</div>
+                    <div class="contrib-item"><strong>Jens Edgar Haugen</strong> — Regi</div>
+                    <div class="contrib-item"><strong>Olaffur Johnson</strong> — Foto</div>
+                    <div class="contrib-item"><strong>Kenneth Gustafsen</strong> — Lyd</div>
+                    <div class="contrib-item"><strong>Thor Erik Løkken</strong> — Lys</div>
+                </div>
+            </div>
+            <div class="contrib-group">
+                <h3 class="contrib-group-title">Andre</h3>
+                <div class="contrib-list">
+                    <div class="contrib-item"><strong>Åse Kringstad</strong> — Virke</div>
+                    <div class="contrib-item"><strong>Jenny Hauga</strong> — Design</div>
+                    <div class="contrib-item"><strong>Midgard Filmkommisjon</strong></div>
+                    <div class="contrib-item"><strong>Vestnorsk filmsenter</strong></div>
+                    <div class="contrib-item"><strong>Monolith</strong></div>
+                    <div class="contrib-item"><strong>Motion Blur</strong></div>
+                    <div class="contrib-item"><strong>Jonas Fylling Christiansen</strong> — Drone</div>
+                    <div class="contrib-item"><strong>Håvard Dyrø</strong> — Drone</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Supporters marquee -->
+<div class="marquee-section">
+    <div class="marquee-track">
+        <div class="marquee-chip">Virke Produsentforeningen</div>
+        <div class="marquee-chip">Norsk Filmforbund</div>
+        <div class="marquee-chip">Norsk Skuespillerforbund</div>
+        <div class="marquee-chip">Den Norske Filmfestivalen</div>
+        <div class="marquee-chip">Nordisk Film & TV Fond</div>
+        <div class="marquee-chip">Norske Filmregissører</div>
+        <div class="marquee-chip">Norske Filmdistributørers Forening</div>
+        <div class="marquee-chip">Film & Kino</div>
+        <div class="marquee-chip">Midgard Filmkommisjon</div>
+        <div class="marquee-chip">Vestnorsk filmsenter</div>
+        <div class="marquee-chip">Qvisten Animasjon</div>
+        <div class="marquee-chip">Motion Blur</div>
+        <!-- duplicate for seamless -->
+        <div class="marquee-chip">Virke Produsentforeningen</div>
+        <div class="marquee-chip">Norsk Filmforbund</div>
+        <div class="marquee-chip">Norsk Skuespillerforbund</div>
+        <div class="marquee-chip">Den Norske Filmfestivalen</div>
+        <div class="marquee-chip">Nordisk Film & TV Fond</div>
+        <div class="marquee-chip">Norske Filmregissører</div>
+        <div class="marquee-chip">Norske Filmdistributørers Forening</div>
+        <div class="marquee-chip">Film & Kino</div>
+        <div class="marquee-chip">Midgard Filmkommisjon</div>
+        <div class="marquee-chip">Vestnorsk filmsenter</div>
+        <div class="marquee-chip">Qvisten Animasjon</div>
+        <div class="marquee-chip">Motion Blur</div>
+    </div>
+</div>
+
+<!-- Final CTA -->
+<section class="final-cta" id="handling">
+    <div class="container">
+        <div class="reveal">
+            <p class="section-eyebrow">Ta handling</p>
+            <h2 class="section-title">Norsk film trenger din stemme nå</h2>
+            <p class="section-desc">Bli med i kampanjen. Del budskapet. Kontakt din stortingsrepresentant. Sammen kan vi sikre fremtiden for norsk film.</p>
+            <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+                <a href="#" class="btn btn-fill">Signer oppropet</a>
+                <a href="mailto:kontakt@nobrainers.no" class="btn" style="background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2);">Kontakt oss</a>
+            </div>
+            <div class="social-row">
+                <a href="https://www.facebook.com/profile.php?id=61585225295085" target="_blank" class="social-btn" aria-label="Facebook">f</a>
+                <a href="https://www.instagram.com/nobrainers.no" target="_blank" class="social-btn" aria-label="Instagram">ig</a>
+                <a href="https://www.snapchat.com/lens/63a2c358b7084ecb8adeb96334648b66?type=SNAPCODE&metadata=01" target="_blank" class="social-btn" aria-label="Snapchat">sc</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-inner">
+        <div class="footer-logo">no<span class="dot">.</span>brainers</div>
+        <p style="font-size:0.8rem;">Et samlet opprop fra den norske filmbransjen</p>
+        <ul class="footer-links">
+            <li><a href="https://www.facebook.com/profile.php?id=61585225295085" target="_blank">Facebook</a></li>
+            <li><a href="https://www.instagram.com/nobrainers.no" target="_blank">Instagram</a></li>
+            <li><a href="https://www.snapchat.com/lens/63a2c358b7084ecb8adeb96334648b66?type=SNAPCODE&metadata=01" target="_blank">Snapchat</a></li>
+            <li><a href="en.html">English</a></li>
+        </ul>
+    </div>
+</footer>
+
+<!-- Back to top -->
+<button class="back-to-top" id="backToTop" aria-label="Tilbake til toppen">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script>
+// Navbar
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 60));
+
+// Mobile menu
+document.getElementById('navToggle').addEventListener('click', () => {
+    document.getElementById('navLinks').classList.toggle('active');
+});
+document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('active')));
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Counter
+document.querySelectorAll('.stat-num[data-target]').forEach(el => {
+    new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return;
+        const t = parseFloat(el.dataset.target), s = el.dataset.suffix || '', d = +el.dataset.decimals || 0;
+        const start = performance.now();
+        (function tick(now) {
+            const p = Math.min((now - start) / 1800, 1);
+            el.textContent = (t * (1 - Math.pow(1 - p, 3))).toFixed(d) + s;
+            if (p < 1) requestAnimationFrame(tick);
+        })(start);
+        obs.unobserve(el); // reuse main obs reference — safe since this is a one-shot
+    }, { threshold: 0.5 }).observe(el);
+});
+
+// Progress bars + bar chart
+const fillObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.style.width = e.target.dataset.width; fillObs.unobserve(e.target); } });
+}, { threshold: 0.3 });
+document.querySelectorAll('.prog-fill, .bar-fill').forEach(el => { el.style.width = '0'; fillObs.observe(el); });
+
+// Back to top
+const btt = document.getElementById('backToTop');
+window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 400));
+btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+// Smooth anchors
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => { e.preventDefault(); const t = document.querySelector(a.getAttribute('href')); if (t) t.scrollIntoView({ behavior: 'smooth' }); });
+});
+</script>
+</body>
+</html>
